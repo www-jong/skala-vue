@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
-const dynamicUrl = 'https://www.naver.com'
+const dynamicUrl = 'https://github.com/www-jong'
 const logoImgSrc = 'https://vuejs.org/images/logo.png'
 const isButtonDisabled = ref(true)
 </script>
@@ -9,8 +9,10 @@ const isButtonDisabled = ref(true)
 <template>
     <div class="practice-section">
         <h2>v-bind 디렉티브 기본 (축약형: 콜론)</h2>
+        <p>v-bind: HTML 요소의 속성(href, src, disabled 등)을 동적으로 바인딩</p>
+        <hr />
         <h3>1) 동적 링크 연결</h3>
-        <a :href="dynamicUrl">네이버로 이동</a>
+        <a :href="dynamicUrl">깃허브 이동</a>
         <br />
 
         <h3>2) 동적 이미지 연결</h3>

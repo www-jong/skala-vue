@@ -1,0 +1,57 @@
+/* 서브 네비게이션 바 전용 스타일 (PracticeApp & ExerciseApp 전용 모듈) */
+.sub-nav-bar {
+  position: sticky;
+  top: 60px;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 10px;
+  background: rgba(241, 245, 249, 0.274);
+  backdrop-filter: blur(1px);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+html.dark .sub-nav-bar {
+  background: rgba(30, 41, 59, 0.244);
+  border-color: #334155;
+  backdrop-filter: blur(1px);
+}
+
+.sub-nav-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sub-nav-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.sub-nav-btn.active {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+html.dark .sub-nav-btn {
+  color: #94a3b8;
+}
+
+html.dark .sub-nav-btn:hover {
+  background: #334155;
+  color: #f8fafc;
+}
+
+html.dark .sub-nav-btn.active {
+  background: #3b82f6;
+  color: #ffffff;
+}

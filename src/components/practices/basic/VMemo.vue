@@ -8,6 +8,8 @@ const age = ref('30')
 
   <div class="practice-section">
     <h2>v-memo 디렉티브 학습</h2>
+    <p>v-memo: 의존성 배열 값이 변경될 때만 해당 서브트리 재렌더링 최적화</p>
+    <hr />
     <div v-memo="[name]" style="padding: 20px; border: 1px solid #42b883; margin-bottom:10px">
       <p> v-memo 적용 영역(기준: name)</p>
       <p>이름: {{ name }}</p>

@@ -1,16 +1,18 @@
 <script setup>
 import { ref } from 'vue'
-let normalCount = 0
-const vueCount = ref(0)
+let Gold = 0
+const gameGold = ref(0)
 </script>
 
 <template>
   <div class="practice-section">
     <h2>Hello Skala-Vue</h2>
-    <h3>일반 변수 클릭 {{ normalCount }}</h3>
-    <button @click="normalCount++">일반 변수 증가</button>
+    <p>ref: Vue3 반응형 상태 생성 및 일반 변수와의 실시간 갱신 차이 비교</p>
+    <hr />
+    <h3>현재 골드: {{ Gold }}</h3>
+    <button @click="Gold += 100">골드 100G 획득</button>
     <br />
-    <h3>반응형 변수 클릭 {{ vueCount }}</h3>
-    <button @click="vueCount++">반응형 변수 증가</button>
+    <h3>반응형 골드: {{ gameGold }}</h3>
+    <button @click="gameGold += 500">골드상자 오픈</button>
   </div>
 </template>

@@ -7,80 +7,136 @@ const toggleTheme = () => {
   document.documentElement.classList.toggle('dark', isDarkmode.value)
 }
 
-import SampleOne from './components/practices/basic/SampleOne.vue'
-import SampleTwo from './components/practices/basic/SampleTwo.vue'
-import VHtml from './components/practices/basic/VHtml.vue'
-import VHtmlXSS from './components/practices/basic/VHtmlXSS.vue'
-import VText from './components/practices/basic/VText.vue'
-import VBindBasic from './components/practices/basic/VBindBasic.vue'
-import VBindClassBinding from './components/practices/basic/VBindClassBinding.vue'
-import VBindStyleBinding from './components/practices/basic/VBindStyleBinding.vue'
-import VBindShortHand from './components/practices/basic/VBindShortHand.vue'
-import VCondition from './components/practices/basic/VCondition.vue'
-import VShow from './components/practices/basic/VShow.vue'
-import VFor from './components/practices/basic/VFor.vue'
-import VPre from './components/practices/basic/VPre.vue'
-import VCloak from './components/practices/basic/VCloak.vue'
-import VOnce from './components/practices/basic/VOnce.vue'
-import VMemo from './components/practices/basic/VMemo.vue'
+// 탭 전환 상태 ('practice' | 'exercise' | 'weather')
+const currentTab = ref('practice')
 
-import VOnEvent from './components/practices/basic/VOnEvent.vue'
-import EventObject from './components/practices/basic/EventObject.vue'
-import EventModifier from './components/practices/basic/EventModifier.vue'
+import ExerciseApp from './ExerciseApp.vue'
+import PracticeApp from './PracticeApp.vue'
 </script>
-<template>
 
+<template>
   <div :class="['app-container', { dark: isDarkmode }]">
-    <!-- 테마 토글 버튼 -->
-    <button class="theme-toggle-btn" @click="toggleTheme">
-      {{ isDarkmode ? '☀️ 라이트 모드' : '🌙 다크 모드' }}
-    </button>
-        <div class="chapter-group">
-          <h1 class="chapter-title">Vue Directive</h1>
-    <SampleOne />
-    <SampleTwo />
-    <VHtml />
-    <VHtmlXSS />
-    <VText />
-    <VBindBasic />
-    <VBindClassBinding />
-    <VBindStyleBinding />
-    <VBindShortHand />
-    <VCondition />
-    <VShow />
-    <VFor />
-    <VPre />
-    <VCloak />
-    <VOnce />
-    <VMemo />
-    </div>
-    <div class="chapter-group">
-      <h1 class="chapter-title">Vue Event Handling</h1>
-    <VOnEvent />
-    <EventObject/>
-    <EventModifier/>
-    </div>
+    <!-- 상단 네비게이션 바 -->
+    <nav class="nav-bar">
+      <div class="nav-tabs">
+        <button :class="['nav-btn', { active: currentTab === 'practice' }]" @click="currentTab = 'practice'">
+          PracticeApp(실습)
+        </button>
+        <button :class="['nav-btn', { active: currentTab === 'exercise' }]" @click="currentTab = 'exercise'">
+          ExerciseApp(과제)
+        </button>
+      </div>
+
+      <!-- 테마 토글 버튼 -->
+      <button class="theme-toggle-btn" @click="toggleTheme">
+        {{ isDarkmode ? '☀️ 라이트 모드' : '🌙 다크 모드' }}
+      </button>
+    </nav>
+
+    <!-- 탭별 메인 컨텐츠 영역 -->
+    <main class="main-content">
+      <!-- 1) PracticeApp 뷰 -->
+      <div v-if="currentTab === 'practice'">
+        <PracticeApp />
+      </div>
+
+      <!-- 2) ExerciseApp 뷰 -->
+      <div v-else-if="currentTab === 'exercise'">
+        <ExerciseApp />
+      </div>
+    </main>
   </div>
 </template>
+
 <style>
-/* 전체 중앙 카드 레이아웃 */
+/* 전체 레이아웃 */
 #app {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 80px 20px 40px;
 }
 
+/* 상단 네비게이션 고정 바 */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 1000;
+}
+
+.app-container.dark .nav-bar {
+  background: rgba(15, 23, 42, 0.9);
+  border-bottom-color: #334155;
+  backdrop-filter: blur(2px);
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  background: transparent;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.nav-btn.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.app-container.dark .nav-btn {
+  border-color: #475569;
+  color: #94a3b8;
+}
+
+.app-container.dark .nav-btn:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+.app-container.dark .nav-btn.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+/* 챕터 그룹 스타일 */
 .chapter-group {
   margin-bottom: 40px;
   padding: 20px;
   border: 2px dashed #cbd5e1;
   border-radius: 16px;
 }
+
 .chapter-title {
   font-size: 1.5rem;
   margin-bottom: 20px;
   color: #3b82f6;
 }
+
 /* 카드 기본 스타일 */
 .practice-section {
   background: #ffffff;
@@ -114,11 +170,10 @@ import EventModifier from './components/practices/basic/EventModifier.vue'
   background: #2563eb;
 }
 
-
 /* 테마 스위치 스타일 */
 .app-container {
   min-height: 100vh;
-  padding: 40px 20px;
+  padding: 20px;
   background-color: #f8fafc;
   color: #1e293b;
   transition: all 0.3s ease;
@@ -140,18 +195,14 @@ import EventModifier from './components/practices/basic/EventModifier.vue'
   color: #f8fafc;
 }
 
-/* 토글 버튼 */
+/* 테마 토글 버튼 */
 .theme-toggle-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px 16px;
+  padding: 8px 14px;
   border-radius: 20px;
   border: none;
   background: #334155;
   color: white;
   font-weight: bold;
   cursor: pointer;
-  z-index: 1000;
 }
 </style>

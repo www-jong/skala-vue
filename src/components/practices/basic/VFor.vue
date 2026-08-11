@@ -16,6 +16,8 @@ const items = ref([
 <template>
     <div class="practice-section">
         <h2>v-for 디렉티브 학습</h2>
+        <p>v-for: 배열 및 객체 항목을 순회하여 DOM 목록 렌더링 (고유 :key 필수)</p>
+        <hr />
         <h3>1) 배열 렌더링</h3>
         <ul>
             <li v-for="(fruit, index) in fruits" :key="index">{{ index + 1 }}번 과일: {{ fruit }}</li>

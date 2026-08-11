@@ -1,0 +1,12 @@
+/* 외부 CSS 스타일 모듈 (VStyle.vue에서 @import로 적용) */
+.title-external,
+.title.title-external {
+  color: #2e87b7 !important;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+html.dark .title-external,
+html.dark .title.title-external {
+  color: #38bdf8 !important;
+}
