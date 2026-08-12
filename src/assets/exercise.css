@@ -231,64 +231,151 @@
   color: #ffffff;
 }
 
+/* 개편된 날씨 카드 (WeatherCard) 모던 스타일 */
 .weather-card {
-  background: #f8fafc;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 12px;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 14px;
   cursor: pointer;
   position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.weather-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+  border-color: #cbd5e1;
 }
 
 .weather-card.selected {
   border: 2px solid #3b82f6 !important;
-  background-color: #eff6ff !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25) !important;
+  background-color: #f0f7ff !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.2) !important;
 }
 
-.weather-card h4 {
-  margin: 0 0 8px 0;
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  margin: 0 !important;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: #1e293b;
 }
 
-.weather-card p {
-  margin: 4px 0;
-  color: #475569;
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
+.temp-section {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.main-temp {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.temp-unit {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #3b82f6;
+  margin-left: 2px;
+}
+
+.feels-temp {
   font-size: 0.85rem;
-  font-weight: bold;
-  margin-top: 4px;
+  font-weight: 600;
+  color: #64748b;
+  background-color: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 12px;
 }
 
-.badge.hot { background: #fee2e2; color: #dc2626; }
-.badge.warm { background: #ffedd5; color: #ea580c; }
-.badge.pleasant { background: #dcfce7; color: #16a34a; }
-.badge.chilly { background: #e0f2fe; color: #0284c7; }
-.badge.cold { background: #f1f5f9; color: #475569; }
+.card-footer-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.condition-tag {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f8fafc;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.humidity-info {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0284c7;
+}
 
 .btn-detail {
-  position: absolute;
-  right: 12px;
-  top: 15px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  background: #0284c7;
-  color: white;
-  font-size: 0.85rem;
-  font-weight: bold;
+  position: static !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  border: none !important;
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
   cursor: pointer;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
 }
 
 .btn-detail:hover {
-  background: #0369a1;
+  background: #2563eb !important;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
 }
+
+.btn-detail:active {
+  transform: scale(0.96);
+}
+
+/* 뱃지 파스텔 톤 고도화 */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.badge.hot { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.badge.warm { background: #ffedd5; color: #ea580c; border: 1px solid #fdba74; }
+.badge.pleasant { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+.badge.chilly { background: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc; }
+.badge.cold { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
 
 .status-bar {
   background: #e8f5e9;
@@ -429,13 +516,48 @@ html.dark .weather-card {
   color: #f8fafc;
 }
 
+html.dark .weather-card:hover {
+  border-color: #475569;
+}
+
 html.dark .weather-card.selected {
   background-color: #10243f !important;
   border-color: #60a5fa !important;
+  box-shadow: 0 6px 20px rgba(96, 165, 250, 0.25) !important;
 }
 
-html.dark .weather-card h4 { color: #f8fafc !important; }
-html.dark .weather-card p { color: #cbd5e1 !important; }
+html.dark .card-title {
+  color: #f8fafc !important;
+}
+
+html.dark .main-temp {
+  color: #f8fafc !important;
+}
+
+html.dark .temp-unit {
+  color: #60a5fa !important;
+}
+
+html.dark .feels-temp {
+  background-color: #0f172a;
+  color: #94a3b8;
+}
+
+html.dark .condition-tag {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+html.dark .humidity-info {
+  color: #38bdf8;
+}
+
+html.dark .badge.hot { background: #450a0a !important; color: #fca5a5 !important; border-color: #991b1b !important; }
+html.dark .badge.warm { background: #431407 !important; color: #fdba74 !important; border-color: #9a3412 !important; }
+html.dark .badge.pleasant { background: #052e16 !important; color: #86efac !important; border-color: #166534 !important; }
+html.dark .badge.chilly { background: #0c4a6e !important; color: #7dd3fc !important; border-color: #075985 !important; }
+html.dark .badge.cold { background: #1e293b !important; color: #cbd5e1 !important; border-color: #475569 !important; }
 
 html.dark .status-bar {
   background: #14532d;

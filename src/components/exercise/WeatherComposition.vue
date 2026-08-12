@@ -177,33 +177,48 @@ watchEffect(() => {
 
     <section class="list-box">
       <h3>지역별 날씨 현황</h3>
-      <div v-for="item in filteredWeatherList" :key="item.location.id"
-        :class="['weather-card', { selected: selectedCityId === item.location.id }]" @click="
+      <div
+        v-for="item in filteredWeatherList"
+        :key="item.location.id"
+        :class="['weather-card', { selected: selectedCityId === item.location.id }]"
+        @click="
           selectedCityId = item.location.id;
-        selectedCityInfo = `${item.location.region} ${item.location.name}이(가) 선택되었습니다.`">
-        <h4>
-          [{{ item.location.country }}] {{ item.location.region }} {{ item.location.name }}
-          ({{ item.current.condition.text }})
-        </h4>
-        <p>현재 기온: {{ item.current.temp_c }}°C (체감: {{ item.current.feels_like_c }}°C)</p>
+          selectedCityInfo = `${item.location.region} ${item.location.name}이(가) 선택되었습니다.`
+        "
+      >
+        <div class="card-header">
+          <h4 class="card-title">
+            📍 [{{ item.location.country }}] {{ item.location.region }} {{ item.location.name }}
+          </h4>
+          <button
+            class="btn-detail"
+            @click.stop="showDetail(item.location.name, item.current.condition.text)"
+          >
+            상세보기 →
+          </button>
+        </div>
 
-        <!-- 온도별 이모티콘 뱃지 -->
-        <span v-if="item.current.temp_c >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>
-        <span v-else-if="item.current.temp_c >= 25" class="badge warm">☀️ 더움 (25°C 이상)</span>
-        <span v-else-if="item.current.temp_c >= 18" class="badge pleasant">🌿 쾌적 (18°C 이상)</span>
-        <span v-else-if="item.current.temp_c >= 10" class="badge chilly">🧥 쌀쌀 (10°C 이상)</span>
-        <span v-else class="badge cold">❄️ 한파 (10°C 미만)</span>
+        <div class="card-body">
+          <div class="temp-section">
+            <span class="main-temp">{{ item.current.temp_c }}<span class="temp-unit">°C</span></span>
+            <span class="feels-temp">체감 {{ item.current.feels_like_c }}°C</span>
+          </div>
 
-        <br />
-        <!-- 상세 보기 버튼 (.stop 수식어로 카드 클릭 버블링 방지) -->
-        <button class="btn-detail" @click.stop="showDetail(item.location.name, item.current.condition.text)">
-          상세보기
-        </button>
-
-        <p style="margin-top: 8px;">습도: {{ item.current.humidity }}%</p>
+          <div class="card-footer-info">
+            <div class="badge-group">
+              <span v-if="item.current.temp_c >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>
+              <span v-else-if="item.current.temp_c >= 25" class="badge warm">☀️ 더움 (25°C 이상)</span>
+              <span v-else-if="item.current.temp_c >= 18" class="badge pleasant">🌿 쾌적 (18°C 이상)</span>
+              <span v-else-if="item.current.temp_c >= 10" class="badge chilly">🧥 쌀쌀 (10°C 이상)</span>
+              <span v-else class="badge cold">❄️ 한파 (10°C 미만)</span>
+              <span class="condition-tag">상태: {{ item.current.condition.text }}</span>
+            </div>
+            <span class="humidity-info">💧 습도 {{ item.current.humidity }}%</span>
+          </div>
+        </div>
       </div>
       <p class="noSearchResult" v-if="filteredWeatherList.length === 0">
-        😫검색 결과와 일치하는 도시가 없습니다.😫
+        😫 검색 결과와 일치하는 도시가 없습니다. 😫
       </p>
     </section>
     <div class=" status-bar">
