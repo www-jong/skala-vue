@@ -2,228 +2,113 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useConfigStore } from '@/stores/configStore'
-import { useWeatherStore } from '@/stores/weatherStore'
-import { weatherService } from '@/services/weatherService'
-import '@/assets/mainWeather.css'
 
 const route = useRoute()
 const router = useRouter()
 const configStore = useConfigStore()
-const weatherStore = useWeatherStore()
+
+const mockDetails = {
+  loc_01: { country: '대한민국', region: '서울특별시', name: '강남구', temp: 28, feelsLike: 29.5, status: '맑음', humidity: '60%', lat: 37.5172, lon: 127.0473 },
+  loc_02: { country: '대한민국', region: '울산광역시', name: '남구', temp: 30, feelsLike: 32.1, status: '구름조금', humidity: '70%', lat: 35.5439, lon: 129.3301 },
+  loc_03: { country: '대한민국', region: '부산광역시', name: '해운대구', temp: 23, feelsLike: 24.8, status: '흐림', humidity: '80%', lat: 35.1631, lon: 129.1636 },
+  loc_04: { country: '대한민국', region: '경기도', name: '수원시', temp: 16, feelsLike: 17.0, status: '비', humidity: '85%', lat: 37.2636, lon: 127.0286 },
+  loc_05: { country: '대한민국', region: '제주특별자치도', name: '제주시', temp: 9, feelsLike: 10.0, status: '맑음', humidity: '65%', lat: 33.4996, lon: 126.5312 }
+}
 
 const cityData = ref(null)
-const hourlyForecast = ref([])
-const dailyForecast = ref([])
-const isForecastLoading = ref(false)
 
-onMounted(async () => {
+onMounted(() => {
   const id = route.params.cityId
-  if (weatherStore.displayList.length === 0) {
-    await weatherStore.initWeather()
-  }
-  const found = await weatherService.getCityById(id, weatherStore.displayList)
-  if (found) {
-    cityData.value = found
-    // Open-Meteo 24시간 시간별 & 7일간 주간예보 실시간 수신
-    if (found.location.lat && found.location.lon) {
-      isForecastLoading.value = true
-      try {
-        const { hourlyList, dailyList } = await weatherService.fetchCityDetailedForecast(
-          found.location.lat,
-          found.location.lon,
-        )
-        hourlyForecast.value = hourlyList
-        dailyForecast.value = dailyList
-      } finally {
-        isForecastLoading.value = false
-      }
-    }
+  if (mockDetails[id]) {
+    cityData.value = mockDetails[id]
   }
 })
 
-const convertTemp = (tempC) => {
-  if (configStore.unit === 'fahrenheit') {
-    return Math.round((tempC * 9) / 5 + 32)
-  }
-  return tempC
-}
-
 const displayTemp = computed(() => {
   if (!cityData.value) return 0
-  return convertTemp(cityData.value.current.temp_c)
+  const rawTemp = cityData.value.temp
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((rawTemp * 9) / 5 + 32)
+  }
+  return rawTemp
 })
 
 const displayFeelTemp = computed(() => {
   if (!cityData.value) return 0
-  return convertTemp(cityData.value.current.feels_like_c)
+  const rawTemp = cityData.value.feelsLike
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((rawTemp * 9) / 5 + 32)
+  }
+  return rawTemp
 })
 
-const formattedLocation = computed(() => {
-  if (!cityData.value) return ''
-  const { country, region, name } = cityData.value.location
-  if (!region || region === name) {
-    return `[${country}] ${name}`
-  }
-  return `[${country}] ${region} ${name}`
-})
-
-const handleBack = () => {
-  if (window.history.length > 1) {
-    router.back()
-  } else {
-    router.push('/')
-  }
-}
 </script>
 
 <template>
-  <div class="main-weather-container detail-container-box">
-    <div class="detail-header-nav">
-      <h2>📊 {{ cityData ? formattedLocation : '관측지역' }} 상세 기상 예보</h2>
-      <button @click="handleBack" class="back-btn">← 대시보드로 돌아가기</button>
-    </div>
+  <div class="practice-section">
+    <h2>📊 지역별 상세 기상 관측 정보</h2>
     <hr />
 
-    <div v-if="cityData" class="detail-main-wrapper">
-      <!-- 상단 메인 기온 히어로 카운터 -->
-      <div class="detail-hero-card">
-        <div class="hero-left">
-          <div class="location-badge-wrap">
-            <span class="city-id-tag">ID: {{ route.params.cityId }}</span>
-            <span class="country-tag">[{{ cityData.location.country }}]</span>
-          </div>
-          <h3 class="location-full-name">📍 {{ formattedLocation }}</h3>
-        </div>
-
-        <div class="hero-right">
-          <div class="hero-temp-group">
-            <span class="hero-main-temp">{{ displayTemp }}<span class="hero-unit">{{ configStore.unitSymbol }}</span></span>
-            <span class="hero-feels-like">체감 {{ displayFeelTemp }}{{ configStore.unitSymbol }}</span>
-          </div>
-          <div class="hero-status-badge">
-            <span v-if="cityData.current.temp_c >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>
-            <span v-else-if="cityData.current.temp_c >= 25" class="badge warm">☀️ 더움 (25°C 이상)</span>
-            <span v-else-if="cityData.current.temp_c >= 18" class="badge pleasant">🌿 쾌적 (18°C 이상)</span>
-            <span v-else-if="cityData.current.temp_c >= 10" class="badge chilly">🧥 쌀쌀 (10°C 이상)</span>
-            <span v-else class="badge cold">❄️ 한파 (10°C 미만)</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 세부 기상 항목 2x2 그리드 -->
-      <div class="detail-grid">
-        <div class="detail-metric-card">
-          <span class="metric-icon">☀️</span>
-          <div class="metric-info">
-            <span class="metric-label">현재 기상 상태</span>
-            <span class="metric-value">{{ cityData.current.condition.text }}</span>
-          </div>
-        </div>
-
-        <div class="detail-metric-card">
-          <span class="metric-icon">💧</span>
-          <div class="metric-info">
-            <span class="metric-label">대기 습도</span>
-            <span class="metric-value">{{ cityData.current.humidity }}%</span>
-          </div>
-        </div>
-
-        <div class="detail-metric-card">
-          <span class="metric-icon">💨</span>
-          <div class="metric-info">
-            <span class="metric-label">풍속 (Wind Speed)</span>
-            <span class="metric-value">{{ cityData.current.wind_kph }} km/h</span>
-          </div>
-        </div>
-
-        <div class="detail-metric-card">
-          <span class="metric-icon">🌐</span>
-          <div class="metric-info">
-            <span class="metric-label">위도 / 경도</span>
-            <span class="metric-value">{{ cityData.location.lat }}° N / {{ cityData.location.lon }}° E</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Open-Meteo 24시간 시간별 기온 예보 섹션 -->
-      <section class="forecast-section">
-        <div class="forecast-section-header">
-          <h3>⏱️ 24시간 시간별 기온 & 강수 확률 예보</h3>
-          <span class="forecast-sub">좌우로 스크롤하여 24시간 추이를 확인하세요</span>
-        </div>
-
-        <div v-if="isForecastLoading" class="forecast-loading">
-          ⚡ Open-Meteo 시간별 예보 데이터를 로딩 중입니다...
-        </div>
-
-        <div v-else-if="hourlyForecast.length > 0" class="hourly-scroll-container">
-          <div
-            v-for="(item, idx) in hourlyForecast"
-            :key="idx"
-            class="hourly-pill-card"
-          >
-            <span class="hourly-time">{{ item.timeLabel }}</span>
-            <span class="hourly-icon">{{ item.weatherIcon }}</span>
-            <span class="hourly-temp">{{ convertTemp(item.temp_c) }}{{ configStore.unitSymbol }}</span>
-            <span class="hourly-rain" :class="{ active: item.rainProb > 0 }">
-              💧 {{ item.rainProb }}%
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Open-Meteo 7일간 주간 날씨 예보 섹션 -->
-      <section class="forecast-section">
-        <div class="forecast-section-header">
-          <h3>📅 7일간 주간 일기예보</h3>
-          <span class="forecast-sub">최고/최저 기온 및 강수 확률</span>
-        </div>
-
-        <div v-if="isForecastLoading" class="forecast-loading">
-          ⚡ Open-Meteo 주간 예보 데이터를 로딩 중입니다...
-        </div>
-
-        <div v-else-if="dailyForecast.length > 0" class="daily-list-container">
-          <div
-            v-for="(day, idx) in dailyForecast"
-            :key="idx"
-            class="daily-row-card"
-          >
-            <div class="daily-date-group">
-              <span class="daily-date">{{ day.dateLabel }}</span>
-            </div>
-
-            <div class="daily-weather-group">
-              <span class="daily-icon">{{ day.weatherIcon }}</span>
-              <span class="daily-condition">{{ day.conditionText }}</span>
-            </div>
-
-            <div class="daily-rain-group">
-              <span class="daily-rain-badge" :class="{ active: day.rainProbMax > 20 }">
-                🌧️ 강수확률 {{ day.rainProbMax }}%
-              </span>
-            </div>
-
-            <div class="daily-temp-bar-group">
-              <span class="temp-min">{{ convertTemp(day.tempMin_c) }}{{ configStore.unitSymbol }}</span>
-              <div class="temp-range-bar">
-                <div class="temp-range-fill"></div>
-              </div>
-              <span class="temp-max">{{ convertTemp(day.tempMax_c) }}{{ configStore.unitSymbol }}</span>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div v-if="cityData" class="info-card">
+      <h4>📍 지정 지역: [{{ cityData.country }}] {{ cityData.region }} {{ cityData.name }}</h4>
+      <p>도시 고유 ID: <strong>{{ route.params.cityId }}</strong></p>
+      <p>실시간 기온: <strong>{{ displayTemp }}{{ configStore.unitSymbol }}</strong> (체감: {{ displayFeelTemp }}{{
+        configStore.unitSymbol }}</p>
+      <p>기상 현황: <strong>{{ cityData.status }}</strong></p>
+      <p>대기 습도: <strong>{{ cityData.humidity }}</strong></p>
+      <p>위도 / 경도: <strong>{{ cityData.lat }} / {{ cityData.lon }}</strong></p>
     </div>
 
-    <!-- 데이터 없음 예외 상태 카드 -->
-    <div v-else class="detail-empty-card">
-      <span class="empty-icon">😫</span>
-      <h3>해당 도시 정보를 찾을 수 없습니다.</h3>
-      <p>요청하신 도시 고유 ID (<strong>{{ route.params.cityId }}</strong>)의 기상 데이터가 존재하지 않습니다.</p>
-      <button @click="handleBack" class="back-btn" style="margin-top: 15px;">
-        ← 메인 대시보드로 돌아가기
-      </button>
+    <div v-else class="info-card">
+      <p style="color: #ef4444; margin: 0;">😫 해당 도시 (ID: {{ route.params.cityId }})의 데이터가 존재하지 않습니다.</p>
     </div>
+
+    <button @click="router.push('/exercise')" class="back-btn">← 대시보드로 돌아가기</button>
   </div>
 </template>
+
+<style scoped>
+.info-card {
+  background: #f8fafc;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin: 15px 0;
+}
+
+.back-btn {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: #2563eb;
+}
+
+
+html.dark .info-card {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .info-card h4,
+html.dark .info-card p,
+html.dark .info-card strong {
+  color: #f8fafc !important;
+}
+
+html.dark .back-btn {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+html.dark .back-btn:hover {
+  background-color: #2563eb !important;
+}
+</style>

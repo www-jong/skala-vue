@@ -76,7 +76,7 @@ watch(
           <nav class="navigation-bar">
             <RouterLink to="/exercise" class="nav-item">🌦️ 날씨 대시보드</RouterLink>
             <span class="divider">|</span>
-            <RouterLink to="/about" class="nav-item">ℹ️ 서비스 소개</RouterLink>
+            <RouterLink to="/exercise/about" class="nav-item">ℹ️ 서비스 소개</RouterLink>
             <UnitToggler />
           </nav>
           <main>

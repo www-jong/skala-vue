@@ -165,7 +165,7 @@ onMounted(() => {
 
 // 자식 카드 컴포넌트의 상세보기 신호를 받으면 해당 ID 주소로 라우터 점프 실행
 const handleDetailJump = (id) => {
-  router.push(`/weather/${id}`)
+  router.push(`/exercise/weather/${id}`)
 }
 
 </script>
