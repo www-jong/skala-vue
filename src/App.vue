@@ -51,29 +51,32 @@ const route = useRoute()
   padding: 120px 20px 40px;
 }
 
-/* 상단 네비게이션 고정 바 */
+/* 상단 네비게이션 플로팅 글래스모피즘 고정 바 */
 .nav-bar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid #e2e8f0;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 1360px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 20px;
   z-index: 1000;
-  margin: 0;
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 html.dark .nav-bar {
-  background: rgba(15, 23, 42, 0.85);
-  border-bottom-color: #334155;
-  backdrop-filter: blur(12px);
+  background: rgba(19, 25, 39, 0.72);
+  border-color: rgba(129, 140, 248, 0.22);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .nav-tabs {
@@ -82,11 +85,11 @@ html.dark .nav-bar {
 }
 
 .nav-btn {
-  padding: 8px 16px;
+  padding: 8px 18px;
   border-radius: 20px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid rgba(99, 102, 241, 0.2);
   background: transparent;
-  color: #64748b;
+  color: #475569;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
@@ -94,49 +97,86 @@ html.dark .nav-bar {
 }
 
 .nav-btn:hover {
-  background: #f1f5f9;
-  color: #1e293b;
+  background: rgba(99, 102, 241, 0.08);
+  color: #4f46e5;
 }
 
 .nav-btn.active {
-  background: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
 }
 
-.app-container.dark .nav-btn {
-  border-color: #475569;
+html.dark .nav-btn {
   color: #94a3b8;
+  border-color: rgba(129, 140, 248, 0.15);
 }
 
-.app-container.dark .nav-btn:hover {
-  background: #1e293b;
-  color: #f8fafc;
+html.dark .nav-btn:hover {
+  background: rgba(129, 140, 248, 0.15);
+  color: #818cf8;
 }
 
-.app-container.dark .nav-btn.active {
-  background: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
+html.dark .nav-btn.active {
+  background: linear-gradient(135deg, #6366f1 0%, #2dd4bf 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(45, 212, 191, 0.35);
+}
+
+.theme-toggle-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.08);
+  color: #4f46e5;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  color: #ffffff;
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+html.dark .theme-toggle-btn {
+  background: rgba(129, 140, 248, 0.12);
+  border-color: rgba(129, 140, 248, 0.25);
+  color: #2dd4bf;
+}
+
+html.dark .theme-toggle-btn:hover {
+  background: linear-gradient(135deg, #6366f1 0%, #2dd4bf 100%);
+  color: #ffffff;
+  border-color: transparent;
 }
 
 /* 챕터 그룹 스타일 */
 .chapter-group {
   margin-bottom: 40px;
-  padding: 20px;
-  border: 2px dashed #cbd5e1;
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #cbd5e1;
   border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-.chapter-title {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: #3b82f6;
+html.dark .chapter-group {
+  background-color: rgba(30, 41, 59, 0.92);
+  border-color: #334155;
+  color: #f8fafc;
 }
 
 /* 카드 기본 스타일 */
 .practice-section {
-  background: #ffffff;
+  background-color: #ffffff !important;
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 24px;

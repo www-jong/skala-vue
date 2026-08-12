@@ -1,53 +1,32 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* Aurora Midnight Theme Variables */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --primary-accent: #4f46e5;
+  --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  --secondary-accent: #06b6d4;
+  --glass-bg: rgba(255, 255, 255, 0.68);
+  --glass-border: rgba(99, 102, 241, 0.22);
+  --card-bg: #ffffff;
+  --card-border: #e0e7ff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
-
-  --vt-c-indigo: #2c3e50;
-
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --color-background: #ffffff;
+  --color-text: #0f172a;
 }
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+html.dark {
+  --primary-accent: #818cf8;
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #2dd4bf 100%);
+  --secondary-accent: #2dd4bf;
+  --glass-bg: rgba(19, 25, 39, 0.72);
+  --glass-border: rgba(129, 140, 248, 0.22);
+  --card-bg: #131927;
+  --card-border: #1e2638;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
-
-  --section-gap: 160px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
-
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
+  --color-background: #090d16;
+  --color-text: #f8fafc;
 }
 
 *,
@@ -60,11 +39,7 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
+  color: var(--text-main);
   line-height: 1.6;
   font-family:
     Inter,
@@ -88,17 +63,17 @@ body {
 html, body {
   min-height: 100vh;
   margin: 0;
-  background-image: url('/weather_bg_default.jpg');
+  background-image: linear-gradient(rgba(243, 244, 246, 0.35), rgba(243, 244, 246, 0.35)), url('/weather_bg_default.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
-  color: #1e293b;
+  color: #0f172a;
 }
 
 html.dark,
 html.dark body {
-  background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), url('/weather_bg_default.jpg');
+  background-image: linear-gradient(rgba(9, 13, 22, 0.85), rgba(9, 13, 22, 0.85)), url('/weather_bg_default.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
