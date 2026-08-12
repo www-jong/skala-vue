@@ -880,3 +880,163 @@ html.dark .status-bar {
   border-color: #3730a3;
   color: #a5b4fc;
 }
+
+/* ==========================================================================
+   6. 메인 앱 전용 상세보기 모달 스타일 (MainWeatherDetailModal)
+   ========================================================================== */
+.main-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.main-modal-dialog {
+  width: 100%;
+  max-width: 900px;
+  max-height: 88vh;
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3), 0 10px 24px rgba(79, 70, 229, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.main-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 26px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.modal-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #4f46e5;
+  background: #e0e7ff;
+  padding: 4px 10px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.main-modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.modal-close-btn {
+  border: none;
+  background: #e2e8f0;
+  color: #475569;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.main-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.main-modal-footer {
+  padding: 16px 26px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-confirm-btn {
+  padding: 10px 24px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+.modal-confirm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.4);
+}
+
+/* Transitions */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+/* 다크 모드 모달 오버라이드 */
+html.dark .main-modal-dialog {
+  background: #0f172a;
+  border-color: rgba(129, 140, 248, 0.25);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+html.dark .main-modal-header,
+html.dark .main-modal-footer {
+  background: #131927;
+  border-color: #1e2638;
+}
+
+html.dark .main-modal-header h2 {
+  color: #f8fafc;
+}
+
+html.dark .modal-close-btn {
+  background: #1e2638;
+  color: #cbd5e1;
+}
