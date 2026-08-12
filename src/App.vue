@@ -12,7 +12,7 @@ const route = useRoute()
 </script>
 
 <template>
-  <div :class="['app-container', { dark: isDarkmode }]">
+  <div :class="['top-app-wrapper', { dark: isDarkmode }]">
     <!-- 상단 네비게이션 바 -->
     <nav class="nav-bar">
       <div class="nav-tabs">
@@ -58,20 +58,22 @@ const route = useRoute()
   left: 0;
   right: 0;
   height: 60px;
-  background: rgba(255, 255, 255, 0.463);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
   z-index: 1000;
+  margin: 0;
 }
 
-.app-container.dark .nav-bar {
-  background: rgba(15, 23, 42, 0.189);
+html.dark .nav-bar {
+  background: rgba(15, 23, 42, 0.85);
   border-bottom-color: #334155;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
 }
 
 .nav-tabs {
