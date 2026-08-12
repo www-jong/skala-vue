@@ -1,6 +1,8 @@
 <script setup>
+import { computed } from 'vue'
+import { useConfigStore } from '@/stores/configStore'
 
-defineProps({
+const props = defineProps({
   cityItem: {
     type: Object,
     required: true,
@@ -11,7 +13,33 @@ defineProps({
   }
 })
 
+
+
 const emit = defineEmits(['selected-card', 'showDetail'])
+
+const configStore = useConfigStore()
+
+
+
+/** 온도(실제온도, 체감온도)를 화씨/섭씨로 변환  */
+const displayTemp = computed(() => {
+  const rawTemp = props.cityItem.current.temp_c
+  console.log(rawTemp)
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((rawTemp * 9) / 5 + 32)
+  }
+  return rawTemp
+})
+
+const displayFeelTemp = computed(() => {
+  const rawTemp = props.cityItem.current.feels_like_c
+  console.log(rawTemp)
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((rawTemp * 9) / 5 + 32)
+  }
+  return rawTemp
+})
+
 </script>
 
 <template>
@@ -21,7 +49,7 @@ const emit = defineEmits(['selected-card', 'showDetail'])
       [{{ cityItem.location.country }}] {{ cityItem.location.region }} {{ cityItem.location.name }}
       ({{ cityItem.current.condition.text }})
     </h4>
-    <p>현재 기온: {{ cityItem.current.temp_c }}°C (체감: {{ cityItem.current.feels_like_c }}°C)</p>
+    <p>현재 기온: {{ displayTemp }}{{ configStore.unitSymbol }} (체감: {{ displayFeelTemp }}{{ configStore.unitSymbol }})</p>
 
     <!-- 온도별 이모티콘 뱃지 -->
     <span v-if="cityItem.current.temp_c >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>

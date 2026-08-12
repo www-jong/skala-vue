@@ -1,9 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useConfigStore } from '@/stores/configStore'
 
 const route = useRoute()
 const router = useRouter()
+const configStore = useConfigStore()
 
 // 사용자님의 5개 도시 데이터 (loc_01 ~ loc_05) 맵핑
 const mockDetails = {
@@ -22,6 +24,25 @@ onMounted(() => {
     cityData.value = mockDetails[id]
   }
 })
+
+const displayTemp = computed(() => {
+  if (!cityData.value) return 0
+  const rawTemp = cityData.value.temp
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((rawTemp * 9) / 5 + 32)
+  }
+  return rawTemp
+})
+
+const displayFeelTemp = computed(() => {
+  if (!cityData.value) return 0
+  const rawTemp = cityData.value.feelsLike
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((rawTemp * 9) / 5 + 32)
+  }
+  return rawTemp
+})
+
 </script>
 
 <template>
@@ -32,7 +53,8 @@ onMounted(() => {
     <div v-if="cityData" class="info-card">
       <h4>📍 지정 지역: [{{ cityData.country }}] {{ cityData.region }} {{ cityData.name }}</h4>
       <p>도시 고유 ID: <strong>{{ route.params.cityId }}</strong></p>
-      <p>실시간 기온: <strong>{{ cityData.temp }}°C</strong> (체감: {{ cityData.feelsLike }}°C)</p>
+      <p>실시간 기온: <strong>{{ displayTemp }}{{ configStore.unitSymbol }}</strong> (체감: {{ displayFeelTemp }}{{
+        configStore.unitSymbol }}</p>
       <p>기상 현황: <strong>{{ cityData.status }}</strong></p>
       <p>대기 습도: <strong>{{ cityData.humidity }}</strong></p>
       <p>위도 / 경도: <strong>{{ cityData.lat }} / {{ cityData.lon }}</strong></p>
