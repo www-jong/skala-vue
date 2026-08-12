@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
+import '@/assets/themeToggle.css'
 
 const isDarkmode = ref(false)
 const toggleTheme = () => {
@@ -30,10 +31,17 @@ const route = useRoute()
         </RouterLink>
       </div>
 
-      <!-- 테마 토글 버튼 -->
-      <button class="theme-toggle-btn" @click="toggleTheme">
-        {{ isDarkmode ? '☀️ 라이트 모드' : '🌙 다크 모드' }}
-      </button>
+      <!-- 3D 입체 라이트/다크모드 전환 스위치 버튼 -->
+      <div class="theme-toggle-container">
+        <input
+          type="checkbox"
+          name="theme-checkbox"
+          id="theme-checkbox"
+          :checked="isDarkmode"
+          @change="toggleTheme"
+        />
+        <label for="theme-checkbox" class="theme-toggle-label" title="라이트/다크모드 전환"></label>
+      </div>
     </nav>
 
     <!-- 탭별 메인 컨텐츠 영역 -->
