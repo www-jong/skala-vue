@@ -1,7 +1,8 @@
 /* 1. 전체 최외곽 컨테이너 레벨 정의 */
 .app-container {
-  max-width: 900px;
-  margin: 40px 10px 40px 10px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
   padding: 30px 40px;
   background-color: #ffffff;
   border-radius: 12px;
@@ -14,6 +15,7 @@
     Roboto,
     sans-serif;
   color: #2c3e50;
+  box-sizing: border-box;
 }
 
 /* 2. 대주제 (h1) 및 구분선 (hr) 정돈 */
@@ -84,10 +86,12 @@
   padding-bottom: 2px;
 }
 
-/* 과제페이지 스타일 - Component 분리 후 각 페이지별로 이동 */
+/* 과제페이지 스타일 - 고정폭(600px)을 유연한 반응형(100%)으로 개편 */
 .dashboard-wrapper {
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .search-box,
@@ -269,3 +273,26 @@ html.dark .badge.warm { background: #ffedd5 !important; color: #ea580c !importan
 html.dark .badge.pleasant { background: #dcfce7 !important; color: #16a34a !important; }
 html.dark .badge.chilly { background: #e0f2fe !important; color: #0284c7 !important; }
 html.dark .badge.cold { background: #f1f5f9 !important; color: #475569 !important; }
+
+/* navigation-bar 라우터 네비게이션 다크 모드 */
+html.dark .navigation-bar {
+  background-color: #1e293b !important;
+  border: 1px solid #334155;
+}
+
+html.dark .nav-item {
+  color: #94a3b8 !important;
+}
+
+html.dark .nav-item:hover {
+  color: #f8fafc !important;
+}
+
+html.dark .divider {
+  color: #475569 !important;
+}
+
+html.dark .navigation-bar .router-link-exact-active {
+  color: #60a5fa !important;
+  border-bottom-color: #60a5fa !important;
+}

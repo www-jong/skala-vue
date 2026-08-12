@@ -117,7 +117,6 @@ const showDetail = (cityName, status) => {
 
 <template>
   <div class="practice-section">
-    <h2>WeatherMockup (날씨 현황)</h2>
 
     <section class="search-box">
       <h3>🔍 도시 검색</h3>
@@ -161,6 +160,21 @@ const showDetail = (cityName, status) => {
 </template>
 
 <style scoped>
+.status-bar {
+  background: #e8f5e9;
+  padding: 10px;
+  text-align: center;
+  color: #2e7d32;
+  font-weight: bold;
+  border-radius: 6px;
+  margin-top: 15px;
+}
+
+html.dark .status-bar {
+  background: #14532d;
+  color: #86efac;
+}
+
 .weather-card.selected {
   border: 2px solid #3b82f6 !important;
   background-color: #eff6ff !important;

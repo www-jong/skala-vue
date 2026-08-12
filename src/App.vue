@@ -51,9 +51,9 @@ import PracticeApp from './PracticeApp.vue'
 <style>
 /* 전체 레이아웃 */
 #app {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 80px 20px 40px;
+  padding: 120px 20px 40px;
 }
 
 /* 상단 네비게이션 고정 바 */
@@ -63,7 +63,7 @@ import PracticeApp from './PracticeApp.vue'
   left: 0;
   right: 0;
   height: 60px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.463);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid #e2e8f0;
   display: flex;
@@ -74,9 +74,9 @@ import PracticeApp from './PracticeApp.vue'
 }
 
 .app-container.dark .nav-bar {
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(15, 23, 42, 0.189);
   border-bottom-color: #334155;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(8px);
 }
 
 .nav-tabs {

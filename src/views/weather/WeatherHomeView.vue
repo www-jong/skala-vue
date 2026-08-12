@@ -1,5 +1,15 @@
 <script setup>
-import { ref, computed, watch, watchEffect } from 'vue'
+import { ref, computed, watch, watchEffect, onMounted } from 'vue'
+import {useRouter, useRoute} from 'vue-router'
+
+import BaseDashboardCard from '@/components/exercise/BaseDashboardCard.vue'
+import SearchBar from '@/components/exercise/SearchBar.vue'
+import WeatherCard from '@/components/exercise/WeatherCard.vue'
+import WeatherStatusBar from '@/components/exercise/WeatherStatusBar.vue'
+
+const router = useRouter()
+const route = useRoute()
+
 
 const weatherList = ref([
   {
@@ -108,10 +118,6 @@ const searchQuery = ref('')
 const selectedCityInfo = ref('카드를 클릭하거나 검색해 보세요.')
 const selectedCityId = ref('')
 
-// 알림 대행 함수 (window 객체 격리 우회)
-const showDetail = (cityName, status) => {
-  window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
-}
 
 const filteredWeatherList = computed(() => {
 
@@ -142,82 +148,49 @@ watch(selectedCityInfo, (newInfo) => {
 watchEffect(() => {
   console.log(`👀 [watchEffect 자동 호출] 현재 검색어 '${searchQuery.value}'에 매칭되는 API 데이터를 필터링합니다.`)
 })
+
+// 타이핑될 때마다 주소창의 쿼리 스트링 값을 실시간 푸시 개편
+watch(searchQuery, (newQuery) => {
+  router.push({
+    path: route.path,
+    query: { search: newQuery || undefined }
+  })
+})
+
+onMounted(() => {
+  if(route.query.search){
+    searchQuery.value=route.query.search
+  }
+})
+
+// 자식 카드 컴포넌트의 상세보기 신호를 받으면 해당 ID 주소로 라우터 점프 실행
+const handleDetailJump = (id) => {
+  router.push(`/weather/${id}`)
+}
+
 </script>
 
 <template>
   <div class="practice-section">
-    <section class="search-box">
-      <h3>🔍 도시 검색</h3>
-      <input type="text" :value="searchQuery" @input="(e) => (searchQuery = e.target.value)"
-        placeholder="검색할 나라, 지역, 도시명 입력" />
-      <p>검색 중인 도시 : <strong>{{ searchQuery || '전체 보기' }}</strong></p>
-    </section>
+    <BaseDashboardCard class="search-box">
+      <SearchBar :current-query="searchQuery" @update-query="(val) => (searchQuery = val)" />
+    </BaseDashboardCard>
+    <BaseDashboardCard class="list-box">
 
-    <section class="list-box">
+
       <h3>지역별 날씨 현황</h3>
-      <div v-for="item in filteredWeatherList" :key="item.location.id"
-        :class="['weather-card', { selected: selectedCityId === item.location.id }]" @click="
-          selectedCityId = item.location.id;
-        selectedCityInfo = `${item.location.region} ${item.location.name}이(가) 선택되었습니다.`">
-        <h4>
-          [{{ item.location.country }}] {{ item.location.region }} {{ item.location.name }}
-          ({{ item.current.condition.text }})
-        </h4>
-        <p>현재 기온: {{ item.current.temp_c }}°C (체감: {{ item.current.feels_like_c }}°C)</p>
-
-        <!-- 온도별 이모티콘 뱃지 -->
-        <span v-if="item.current.temp_c >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>
-        <span v-else-if="item.current.temp_c >= 25" class="badge warm">☀️ 더움 (25°C 이상)</span>
-        <span v-else-if="item.current.temp_c >= 18" class="badge pleasant">🌿 쾌적 (18°C 이상)</span>
-        <span v-else-if="item.current.temp_c >= 10" class="badge chilly">🧥 쌀쌀 (10°C 이상)</span>
-        <span v-else class="badge cold">❄️ 한파 (10°C 미만)</span>
-
-        <br />
-        <!-- 상세 보기 버튼 (.stop 수식어로 카드 클릭 버블링 방지) -->
-        <button class="btn-detail" @click.stop="showDetail(item.location.name, item.current.condition.text)">
-          상세보기
-        </button>
-
-        <p style="margin-top: 8px;">습도: {{ item.current.humidity }}%</p>
-      </div>
+      <WeatherCard v-for="item in filteredWeatherList" :key="item.location.id" :city-item="item"
+        :is-selected="selectedCityId === item.location.id"
+        @selected-card="(msg) => { selectedCityInfo = msg; selectedCityId = item.location.id; }"
+        @showDetail="handleDetailJump(item.location.id)" />
       <p class="noSearchResult" v-if="filteredWeatherList.length === 0">
         😫검색 결과와 일치하는 도시가 없습니다.😫
       </p>
-    </section>
-    <div class=" status-bar">
-      {{ selectedCityInfo }}
-    </div>
+    </BaseDashboardCard>
+    <WeatherStatusBar :status-message="selectedCityInfo" />
   </div>
 </template>
 <style scoped>
-.status-bar {
-  background: #e8f5e9;
-  padding: 10px;
-  text-align: center;
-  color: #2e7d32;
-  font-weight: bold;
-  border-radius: 6px;
-  margin-top: 15px;
-}
-
-html.dark .status-bar {
-  background: #14532d;
-  color: #86efac;
-}
-
-.weather-card.selected {
-  border: 2px solid #3b82f6 !important;
-  background-color: #eff6ff !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25) !important;
-  /*transform: translateY(-1px);*/
-}
-
-/* 다크 모드 선택된 카드 강조 */
-html.dark .weather-card.selected {
-  background-color: #10243f !important;
-  border-color: #60a5fa !important;
-}
-
 .noSearchResult {
   color: #cc3433 !important;
   padding: 10px 0;

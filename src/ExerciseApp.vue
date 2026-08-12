@@ -1,42 +1,76 @@
 <script setup>
-import { ref } from 'vue'
-import WeatherMockup from '@/components/exercise/WeatherMockup.vue'
-import WeatherComposition from '@/components/exercise/WeatherComposition.vue'
-import WeatherParent from '@/components/exercise/WeatherParent.vue'
-// 과제 하위 서브 탭 상태 ('ex1' | 'ex2')
-const subTab = ref('ex1')
+import { RouterLink, RouterView } from 'vue-router'
+import WeatherMockup from './components/exercise/WeatherMockup.vue'
+import WeatherComposition from './components/exercise/WeatherComposition.vue'
+import WeatherParent from './components/exercise/WeatherParent.vue'
 </script>
 
 <template>
-  <div class="exercise-app-wrapper">
-    <!-- ExerciseApp 전용 상단 서브 네비게이션 바 -->
-    <div class="sub-nav-bar">
-      <button :class="['sub-nav-btn', { active: subTab === 'ex1' }]" @click="subTab = 'ex1'">
-        과제 1: WeatherMockup (기본)
-      </button>
-      <button :class="['sub-nav-btn', { active: subTab === 'ex2' }]" @click="subTab = 'ex2'">
-        과제 2: 날씨 현황 (Composition API)
-      </button>
-      <button :class="['sub-nav-btn', { active: subTab === 'ex3' }]" @click="subTab = 'ex3'">
-        과제 3: 날씨 (Component)
-      </button>
+  <div class="exercise-grid-container">
+    <!-- 과제 1 -->
+    <div class="app-container grid-item">
+      <h1>⛅ 과제 1: 날씨 (Mockup)</h1>
+      <hr />
+      <WeatherMockup />
     </div>
 
-    <!-- 서브 탭별 과제 뷰 전환 -->
-    <main class="exercise-content">
-      <WeatherMockup v-if="subTab === 'ex1'" />
-      <WeatherComposition v-else-if="subTab === 'ex2'" />
-      <WeatherParent v-else-if="subTab === 'ex3'" />
-    </main>
+    <!-- 과제 2 -->
+    <div class="app-container grid-item">
+      <h1>⛅ 과제 2: 날씨 (컴포지션)</h1>
+      <hr />
+      <WeatherComposition />
+    </div>
+
+    <!-- 과제 3 -->
+    <div class="app-container grid-item">
+      <h1>⛅ 과제 3: 날씨 (컴포넌트)</h1>
+      <hr />
+      <WeatherParent />
+    </div>
+
+    <!-- 과제 4 (라우터 적용) -->
+    <div class="app-container grid-item">
+      <h1>⛅ 과제 4: 라우터 적용</h1>
+      <hr />
+      <div class="dashboard-wrapper">
+        <nav class="navigation-bar">
+          <RouterLink to="/" class="nav-item">🌦️ 날씨 대시보드</RouterLink>
+          <span class="divider">|</span>
+          <RouterLink to="/about" class="nav-item">ℹ️ 서비스 소개</RouterLink>
+        </nav>
+        <main>
+          <RouterView />
+        </main>
+      </div>
+    </div>
   </div>
 </template>
 
 <style>
-@import '@/assets/subnavbar.css';
 @import '@/assets/exercise.css';
 
-.exercise-app-wrapper {
-  max-width: 900px;
+/* 반응형 균등 5:5 2x2 그리드 레이아웃 */
+.exercise-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.grid-item {
+  margin: 0 !important;
+  width: 100%;
+  min-width: 0; /* 내부 고정폭에 의한 컬럼 왜곡 방지 */
+  box-sizing: border-box;
+}
+
+/* 화면 너비 1100px 이하 시 세로 1줄 스택 배치 */
+@media (max-width: 1100px) {
+  .exercise-grid-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 </style>

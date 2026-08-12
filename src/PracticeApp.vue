@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 import PracticeBasic from './views/practice/PracticeBasic.vue'
 import PracticeComposition from './views/practice/PracticeComposition.vue'
-import PracticeComponent from './views/practice/PracticeComponent.vue';
-// 하위 서브 탭 상태 ('basic' | 'composition')
+import PracticeComponent from './views/practice/PracticeComponent.vue'
+
+// 하위 서브 탭 상태 ('basic' | 'composition' | 'component')
 const subTab = ref('basic')
 </script>
 
@@ -20,7 +21,6 @@ const subTab = ref('basic')
       <button :class="['sub-nav-btn', { active: subTab === 'component' }]" @click="subTab = 'component'">
         3. Component & Lifecycle
       </button>
-
     </div>
 
     <!-- 서브 탭별 뷰 전환 -->
@@ -35,4 +35,10 @@ const subTab = ref('basic')
 <style>
 @import '@/assets/subnavbar.css';
 @import '@/assets/Practice.css';
+
+/* PracticeApp (실습) 뷰 전용 컴팩트 중앙 정렬 (900px 고정) */
+.practice-app-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+}
 </style>

@@ -150,7 +150,6 @@ watchEffect(() => {
 
 <template>
   <div class="practice-section">
-    <h2>WeatherCompoenet (날씨 현황 + 지역 검색 (분리))</h2>
     <BaseDashboardCard class="search-box">
       <SearchBar :current-query="searchQuery" @update-query="(val) => (searchQuery = val)" />
     </BaseDashboardCard>
