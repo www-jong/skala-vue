@@ -1,6 +1,6 @@
 /**
  * Weather Service API Adapter Layer (Open-Meteo Integration)
- * 대한민국 주요 도시 10개 실시간 관측 & 한글 지명 스마트 검색/자동완성 매핑 지원
+ * 대한민국 주요 도시 10개 실시간 관측, 한글 매핑, 24시간/7일 예보 지원
  */
 
 // 대한민국 10개 주요 관측 도시 기본 좌표 및 지명
@@ -76,6 +76,18 @@ const weatherCodeMap = {
   95: '뇌우',
 }
 
+function getWeatherIcon(code) {
+  if (code === 0) return '☀️'
+  if (code === 1 || code === 2) return '⛅'
+  if (code === 3) return '☁️'
+  if (code >= 45 && code <= 48) return '🌫️'
+  if (code >= 51 && code <= 67) return '🌧️'
+  if (code >= 71 && code <= 77) return '❄️'
+  if (code >= 80 && code <= 82) return '🌦️'
+  if (code >= 95) return '⛈️'
+  return '☀️'
+}
+
 export const weatherService = {
   /**
    * 기본 관측 도시 10개의 Open-Meteo 실시간 데이터를 동시 수신합니다.
@@ -112,13 +124,70 @@ export const weatherService = {
   },
 
   /**
+   * 도시의 24시간 시간별 기온 및 7일간 주간 기상 예보 수신
+   */
+  async fetchCityDetailedForecast(lat, lon) {
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`
+      const res = await fetch(url)
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+      const data = await res.json()
+
+      // 1. 24시간 시간별 예보 가공
+      const hourlyList = []
+      if (data.hourly && data.hourly.time) {
+        const now = new Date()
+        let startIndex = data.hourly.time.findIndex(t => new Date(t) >= now)
+        if (startIndex < 0) startIndex = 0
+        for (let i = startIndex; i < Math.min(startIndex + 24, data.hourly.time.length); i++) {
+          const timeStr = data.hourly.time[i]
+          const hour = new Date(timeStr).getHours()
+          hourlyList.push({
+            timeLabel: `${hour < 10 ? '0' + hour : hour}:00`,
+            temp_c: Math.round(data.hourly.temperature_2m[i]),
+            rainProb: data.hourly.precipitation_probability[i] ?? 0,
+            conditionText: weatherCodeMap[data.hourly.weather_code[i]] || '보통',
+            weatherIcon: getWeatherIcon(data.hourly.weather_code[i]),
+          })
+        }
+      }
+
+      // 2. 7일간 주간 예보 가공
+      const dailyList = []
+      if (data.daily && data.daily.time) {
+        const dayNames = ['일', '월', '화', '수', '목', '금', '토']
+        for (let i = 0; i < data.daily.time.length; i++) {
+          const dateObj = new Date(data.daily.time[i])
+          const month = dateObj.getMonth() + 1
+          const date = dateObj.getDate()
+          const dayName = dayNames[dateObj.getDay()]
+          const isToday = i === 0
+
+          dailyList.push({
+            dateLabel: isToday ? `오늘 (${month}/${date})` : i === 1 ? `내일 (${month}/${date})` : `${month}/${date} (${dayName})`,
+            tempMax_c: Math.round(data.daily.temperature_2m_max[i]),
+            tempMin_c: Math.round(data.daily.temperature_2m_min[i]),
+            rainProbMax: data.daily.precipitation_probability_max[i] ?? 0,
+            conditionText: weatherCodeMap[data.daily.weather_code[i]] || '보통',
+            weatherIcon: getWeatherIcon(data.daily.weather_code[i]),
+          })
+        }
+      }
+
+      return { hourlyList, dailyList }
+    } catch (err) {
+      console.warn('Detailed forecast fetch error:', err)
+      return { hourlyList: [], dailyList: [] }
+    }
+  },
+
+  /**
    * 자동완성 추천 목록 전용 Prefix Search API
    */
   async fetchSuggestions(query) {
     if (!query || !query.trim()) return []
     const trimmed = query.trim()
 
-    // 한글 키워드 부분 매핑 검색 (예: '서' -> 'Seoul', '수' -> 'Suwon')
     let searchTerm = trimmed
     for (const [k, v] of Object.entries(koreanCityAlias)) {
       if (k.startsWith(trimmed)) {
@@ -156,13 +225,11 @@ export const weatherService = {
     if (!query || !query.trim()) return []
     const trimmedQuery = query.trim()
 
-    // 1차: 기본 10개 도시 목록에서 키워드 필터링
     const localMatches = defaultCitiesData.filter((item) => {
       const fullText = `${item.location.country} ${item.location.region} ${item.location.name}`.toLowerCase()
       return fullText.includes(trimmedQuery.toLowerCase())
     })
 
-    // 2차: Open-Meteo Geocoding API 실시간 호출
     try {
       let searchTerm = trimmedQuery
       for (const [k, v] of Object.entries(koreanCityAlias)) {
@@ -210,7 +277,6 @@ export const weatherService = {
 
       const apiResults = await Promise.all(apiRequests)
 
-      // 로컬 필터링 결과와 API 결과 중복 제거 통합
       const combined = [...localMatches]
       apiResults.forEach((item) => {
         if (!combined.some(c => c.location.name === item.location.name)) {

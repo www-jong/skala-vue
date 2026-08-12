@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useConfigStore } from '@/stores/configStore'
 import { useWeatherStore } from '@/stores/weatherStore'
 import { weatherService } from '@/services/weatherService'
+import '@/assets/mainWeather.css'
 
 const route = useRoute()
 const router = useRouter()
@@ -11,6 +12,9 @@ const configStore = useConfigStore()
 const weatherStore = useWeatherStore()
 
 const cityData = ref(null)
+const hourlyForecast = ref([])
+const dailyForecast = ref([])
+const isForecastLoading = ref(false)
 
 onMounted(async () => {
   const id = route.params.cityId
@@ -20,25 +24,38 @@ onMounted(async () => {
   const found = await weatherService.getCityById(id, weatherStore.displayList)
   if (found) {
     cityData.value = found
+    // Open-Meteo 24시간 시간별 & 7일간 주간예보 실시간 수신
+    if (found.location.lat && found.location.lon) {
+      isForecastLoading.value = true
+      try {
+        const { hourlyList, dailyList } = await weatherService.fetchCityDetailedForecast(
+          found.location.lat,
+          found.location.lon,
+        )
+        hourlyForecast.value = hourlyList
+        dailyForecast.value = dailyList
+      } finally {
+        isForecastLoading.value = false
+      }
+    }
   }
 })
 
+const convertTemp = (tempC) => {
+  if (configStore.unit === 'fahrenheit') {
+    return Math.round((tempC * 9) / 5 + 32)
+  }
+  return tempC
+}
+
 const displayTemp = computed(() => {
   if (!cityData.value) return 0
-  const rawTemp = cityData.value.current.temp_c
-  if (configStore.unit === 'fahrenheit') {
-    return Math.round((rawTemp * 9) / 5 + 32)
-  }
-  return rawTemp
+  return convertTemp(cityData.value.current.temp_c)
 })
 
 const displayFeelTemp = computed(() => {
   if (!cityData.value) return 0
-  const rawTemp = cityData.value.current.feels_like_c
-  if (configStore.unit === 'fahrenheit') {
-    return Math.round((rawTemp * 9) / 5 + 32)
-  }
-  return rawTemp
+  return convertTemp(cityData.value.current.feels_like_c)
 })
 
 const formattedLocation = computed(() => {
@@ -60,9 +77,9 @@ const handleBack = () => {
 </script>
 
 <template>
-  <div class="detail-container-box">
+  <div class="main-weather-container detail-container-box">
     <div class="detail-header-nav">
-      <h2>📊 지역별 상세 기상 관측 정보</h2>
+      <h2>📊 {{ cityData ? formattedLocation : '관측지역' }} 상세 기상 예보</h2>
       <button @click="handleBack" class="back-btn">← 대시보드로 돌아가기</button>
     </div>
     <hr />
@@ -127,6 +144,76 @@ const handleBack = () => {
           </div>
         </div>
       </div>
+
+      <!-- Open-Meteo 24시간 시간별 기온 예보 섹션 -->
+      <section class="forecast-section">
+        <div class="forecast-section-header">
+          <h3>⏱️ 24시간 시간별 기온 & 강수 확률 예보</h3>
+          <span class="forecast-sub">좌우로 스크롤하여 24시간 추이를 확인하세요</span>
+        </div>
+
+        <div v-if="isForecastLoading" class="forecast-loading">
+          ⚡ Open-Meteo 시간별 예보 데이터를 로딩 중입니다...
+        </div>
+
+        <div v-else-if="hourlyForecast.length > 0" class="hourly-scroll-container">
+          <div
+            v-for="(item, idx) in hourlyForecast"
+            :key="idx"
+            class="hourly-pill-card"
+          >
+            <span class="hourly-time">{{ item.timeLabel }}</span>
+            <span class="hourly-icon">{{ item.weatherIcon }}</span>
+            <span class="hourly-temp">{{ convertTemp(item.temp_c) }}{{ configStore.unitSymbol }}</span>
+            <span class="hourly-rain" :class="{ active: item.rainProb > 0 }">
+              💧 {{ item.rainProb }}%
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Open-Meteo 7일간 주간 날씨 예보 섹션 -->
+      <section class="forecast-section">
+        <div class="forecast-section-header">
+          <h3>📅 7일간 주간 일기예보</h3>
+          <span class="forecast-sub">최고/최저 기온 및 강수 확률</span>
+        </div>
+
+        <div v-if="isForecastLoading" class="forecast-loading">
+          ⚡ Open-Meteo 주간 예보 데이터를 로딩 중입니다...
+        </div>
+
+        <div v-else-if="dailyForecast.length > 0" class="daily-list-container">
+          <div
+            v-for="(day, idx) in dailyForecast"
+            :key="idx"
+            class="daily-row-card"
+          >
+            <div class="daily-date-group">
+              <span class="daily-date">{{ day.dateLabel }}</span>
+            </div>
+
+            <div class="daily-weather-group">
+              <span class="daily-icon">{{ day.weatherIcon }}</span>
+              <span class="daily-condition">{{ day.conditionText }}</span>
+            </div>
+
+            <div class="daily-rain-group">
+              <span class="daily-rain-badge" :class="{ active: day.rainProbMax > 20 }">
+                🌧️ 강수확률 {{ day.rainProbMax }}%
+              </span>
+            </div>
+
+            <div class="daily-temp-bar-group">
+              <span class="temp-min">{{ convertTemp(day.tempMin_c) }}{{ configStore.unitSymbol }}</span>
+              <div class="temp-range-bar">
+                <div class="temp-range-fill"></div>
+              </div>
+              <span class="temp-max">{{ convertTemp(day.tempMax_c) }}{{ configStore.unitSymbol }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- 데이터 없음 예외 상태 카드 -->
