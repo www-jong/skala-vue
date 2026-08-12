@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 const isDarkmode = ref(false)
 const toggleTheme = () => {
@@ -7,11 +8,7 @@ const toggleTheme = () => {
   document.documentElement.classList.toggle('dark', isDarkmode.value)
 }
 
-// 탭 전환 상태 ('practice' | 'exercise' | 'weather')
-const currentTab = ref('practice')
-
-import ExerciseApp from './ExerciseApp.vue'
-import PracticeApp from './PracticeApp.vue'
+const route = useRoute()
 </script>
 
 <template>
@@ -19,12 +16,18 @@ import PracticeApp from './PracticeApp.vue'
     <!-- 상단 네비게이션 바 -->
     <nav class="nav-bar">
       <div class="nav-tabs">
-        <button :class="['nav-btn', { active: currentTab === 'practice' }]" @click="currentTab = 'practice'">
+        <RouterLink
+          to="/practice"
+          :class="['nav-btn', { active: route.path === '/practice' }]"
+        >
           PracticeApp(실습)
-        </button>
-        <button :class="['nav-btn', { active: currentTab === 'exercise' }]" @click="currentTab = 'exercise'">
+        </RouterLink>
+        <RouterLink
+          to="/exercise"
+          :class="['nav-btn', { active: route.path.startsWith('/exercise') || route.path === '/about' || route.path.startsWith('/weather') }]"
+        >
           ExerciseApp(과제)
-        </button>
+        </RouterLink>
       </div>
 
       <!-- 테마 토글 버튼 -->
@@ -35,15 +38,7 @@ import PracticeApp from './PracticeApp.vue'
 
     <!-- 탭별 메인 컨텐츠 영역 -->
     <main class="main-content">
-      <!-- 1) PracticeApp 뷰 -->
-      <div v-if="currentTab === 'practice'">
-        <PracticeApp />
-      </div>
-
-      <!-- 2) ExerciseApp 뷰 -->
-      <div v-else-if="currentTab === 'exercise'">
-        <ExerciseApp />
-      </div>
+      <RouterView />
     </main>
   </div>
 </template>

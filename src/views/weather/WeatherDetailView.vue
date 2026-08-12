@@ -64,7 +64,7 @@ const displayFeelTemp = computed(() => {
       <p style="color: #ef4444; margin: 0;">😫 해당 도시 (ID: {{ route.params.cityId }})의 데이터가 존재하지 않습니다.</p>
     </div>
 
-    <button @click="router.push('/')" class="back-btn">← 메인 대시보드로 돌아가기</button>
+    <button @click="router.push('/exercise')" class="back-btn">← 메인 대시보드로 돌아가기</button>
   </div>
 </template>
 
