@@ -1,9 +1,9 @@
 /**
  * Weather Service API Adapter Layer (Open-Meteo Integration)
- * 대한민국 주요 도시 10개 실시간 관측 & 한글 지명 스마트 검색 매핑 지원
+ * 대한민국 주요 도시 10개 실시간 관측 & 한글 지명 스마트 검색/자동완성 매핑 지원
  */
 
-// 대한민국 10개 주요 관측 도시 기본 좌표 및 지명()
+// 대한민국 10개 주요 관측 도시 기본 좌표 및 지명
 const defaultCitiesData = [
   { location: { id: 'loc_01', country: '대한민국', region: '서울특별시', name: '강남구', lat: 37.5172, lon: 127.0473 }, current: { temp_c: 24, feels_like_c: 26, condition: { text: '맑음' }, humidity: 65, wind_kph: 12 } },
   { location: { id: 'loc_02', country: '대한민국', region: '울산광역시', name: '남구', lat: 35.5439, lon: 129.3301 }, current: { temp_c: 25, feels_like_c: 27, condition: { text: '구름조금' }, humidity: 70, wind_kph: 14 } },
@@ -112,6 +112,44 @@ export const weatherService = {
   },
 
   /**
+   * 자동완성 추천 목록 전용 Prefix Search API
+   */
+  async fetchSuggestions(query) {
+    if (!query || !query.trim()) return []
+    const trimmed = query.trim()
+
+    // 한글 키워드 부분 매핑 검색 (예: '서' -> 'Seoul', '수' -> 'Suwon')
+    let searchTerm = trimmed
+    for (const [k, v] of Object.entries(koreanCityAlias)) {
+      if (k.startsWith(trimmed)) {
+        searchTerm = v
+        break
+      }
+    }
+
+    try {
+      const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchTerm)}&count=6&language=ko&format=json`
+      const res = await fetch(url)
+      if (!res.ok) return []
+      const data = await res.json()
+      if (!data.results) return []
+
+      return data.results.map((city, index) => ({
+        id: `sug_${city.id || index}`,
+        country: city.country || '해외',
+        region: city.admin1 || city.country || '지역',
+        name: city.name,
+        fullName: `${city.country ? '[' + city.country + '] ' : ''}${city.admin1 ? city.admin1 + ' ' : ''}${city.name}`,
+        lat: city.latitude,
+        lon: city.longitude,
+      }))
+    } catch (err) {
+      console.warn('Prefix search suggestions error:', err)
+      return []
+    }
+  },
+
+  /**
    * 글로벌 Geocoding 실시간 도시 검색 (한글 매핑 연동)
    */
   async searchCities(query) {
@@ -126,7 +164,14 @@ export const weatherService = {
 
     // 2차: Open-Meteo Geocoding API 실시간 호출
     try {
-      const searchTerm = koreanCityAlias[trimmedQuery] || trimmedQuery
+      let searchTerm = trimmedQuery
+      for (const [k, v] of Object.entries(koreanCityAlias)) {
+        if (k.startsWith(trimmedQuery)) {
+          searchTerm = v
+          break
+        }
+      }
+
       const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchTerm)}&count=8&language=ko&format=json`
       const res = await fetch(url)
       if (!res.ok) return localMatches

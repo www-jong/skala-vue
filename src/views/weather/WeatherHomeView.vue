@@ -2,6 +2,7 @@
 import { onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWeatherStore } from '@/stores/weatherStore'
+import '@/assets/mainWeather.css'
 
 import MainUnitToggler from '@/components/main-weather/MainUnitToggler.vue'
 import MainSearchBar from '@/components/main-weather/MainSearchBar.vue'
@@ -50,13 +51,13 @@ const handleShowDetail = (city) => {
 </script>
 
 <template>
-  <div class="practice-section">
-    <div class="header-row">
-      <h2>🌦️ 실시간 글로벌 기상 관측 대시보드</h2>
+  <div class="main-weather-container">
+    <div class="main-header-row">
+      <h2 class="main-header-title">🌦️ 실시간 글로벌 기상 관측 대시보드</h2>
       <MainUnitToggler />
     </div>
 
-    <!-- 모던 글로벌 검색바 -->
+    <!-- 대형 와이드 모던 검색바 (100% 1200px 와이드 지원) -->
     <MainSearchBar
       :search-query="weatherStore.searchQuery"
       :is-loading="weatherStore.isLoading"
@@ -65,8 +66,8 @@ const handleShowDetail = (city) => {
     />
 
     <!-- 날씨 카드 리스트 영역 -->
-    <section class="list-box">
-      <h3>관측 지역 현황 (실시간 Open-Meteo API 연동)</h3>
+    <section class="main-list-box">
+      <h3>대한민국 및 글로벌 관측 지역 현황 (Open-Meteo API 실시간 연동)</h3>
 
       <div v-if="weatherStore.isLoading" class="status-bar" style="margin-bottom: 16px;">
         ⚡ 실시간 기상 데이터를 수신하는 중입니다...
@@ -92,21 +93,3 @@ const handleShowDetail = (city) => {
     <MainWeatherStatusBar :status-message="weatherStore.selectedCityInfo" />
   </div>
 </template>
-
-<style scoped>
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.header-row h2 {
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: var(--text-main);
-}
-</style>

@@ -7,11 +7,14 @@ export const useWeatherStore = defineStore('mainWeather', () => {
   const searchResults = ref([])
   const searchQuery = ref('')
   const selectedCityId = ref(null)
-  const selectedCityInfo = ref('원하시는 도시 카드를 클릭하여 상태를 선택하세요.')
+  const selectedCityInfo = ref('원하시는 관측 도시 카드를 클릭하여 상태를 선택하세요.')
   const isLoading = ref(false)
 
-  // 기본 날씨 로딩
-  async function initWeather() {
+  // 기본 관측 날씨 로딩 (캐시가 존재하면 재호출 방지)
+  async function initWeather(force = false) {
+    if (defaultList.value.length > 0 && !force) {
+      return
+    }
     isLoading.value = true
     try {
       const data = await weatherService.fetchDefaultCitiesWeather()
