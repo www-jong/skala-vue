@@ -168,11 +168,3 @@ watchEffect(() => {
     <WeatherStatusBar :status-message="selectedCityInfo" />
   </div>
 </template>
-<style scoped>
-.noSearchResult {
-  color: #cc3433 !important;
-  padding: 10px 0;
-  font-size: large;
-  text-align: center
-}
-</style>

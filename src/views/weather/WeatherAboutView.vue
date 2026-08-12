@@ -27,14 +27,6 @@ const handleGoHome = () => {
 </template>
 
 <style scoped>
-.description-box {
-  background-color: #f8f9fa;
-  padding: 12px;
-  border-radius: 6px;
-  line-height: 1.5;
-  font-size: 14px;
-}
-
 ul {
   padding-left: 20px;
   margin: 8px 0 0 0;
@@ -42,7 +34,6 @@ ul {
 
 li {
   margin-bottom: 6px;
-  color: #555;
 }
 
 code {
@@ -50,38 +41,5 @@ code {
   padding: 2px 4px;
   border-radius: 4px;
   color: #d63031;
-}
-
-.home-btn {
-  width: 100%;
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-html.dark .description-box {
-  background-color: #1e293b !important;
-  border-color: #334155 !important;
-  color: #f8fafc !important;
-}
-
-html.dark .description-box p,
-html.dark .description-box li {
-  color: #f8fafc !important;
-}
-
-html.dark .description-box code {
-  background-color: #334155 !important;
-  color: #fbbf24 !important;
-}
-
-html.dark .home-btn {
-  background-color: #3b82f6 !important;
-  color: #ffffff !important;
 }
 </style>

@@ -1,4 +1,54 @@
-/* 1. 전체 최외곽 컨테이너 레벨 정의 */
+/* ==========================================================================
+   Exercise App (과제 전체) 통합 스타일시트
+   ========================================================================== */
+
+/* 1. 글로벌 테마 트랜지션 (라이트/다크모드 전환 시 전 영역 일괄 부드럽게) */
+*,
+*::before,
+*::after {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* 2. 최외곽 컨테이너 및 반응형 레이아웃 */
+.exercise-app-wrapper {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.exercise-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.grid-item {
+  margin: 0 !important;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.single-exercise-container {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.single-item {
+  width: 100%;
+  margin: 0 auto !important;
+}
+
+@media (max-width: 1100px) {
+  .exercise-grid-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .app-container {
   width: 100%;
   max-width: 100%;
@@ -7,48 +57,35 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  font-family:
-    'Pretendard',
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    Roboto,
-    sans-serif;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   color: #2c3e50;
   box-sizing: border-box;
+  border: 1px solid #e2e8f0;
 }
 
-/* 2. 대주제 (h1) 및 구분선 (hr) 정돈 */
 .app-container h1 {
   font-size: 1.5rem;
   font-weight: 700;
   color: #2c3e50;
-  margin-top: 48px;
+  margin-top: 0;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* 첫 번째 h1 상단 여백 제거 */
-.app-container h1:first-of-type {
-  margin-top: 0;
-}
-
-/* hr */
 .app-container hr {
   border: none;
   border-top: 2px solid #e9ecef;
   margin-bottom: 24px;
 }
 
-/* 세션 대제목 (h1) 스타일링 */
-.exercise-container h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #1a252f;
-  margin-top: 40px;
-  margin-bottom: 8px;
+/* 3. 과제 4/5 내비게이션 바 & 대시보드 래퍼 */
+.dashboard-wrapper {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .navigation-bar {
@@ -60,6 +97,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
 }
 
 .nav-item {
@@ -67,7 +105,6 @@
   color: #7f8c8d;
   font-weight: bold;
   font-size: 16px;
-  transition: color 0.2s ease;
 }
 
 .nav-item:hover {
@@ -79,21 +116,28 @@
   color: #dcdde1;
 }
 
-/* 🔥 Vue Router가 활성화된 링크 태그에 자동으로 부여하는 클래스 스펙 */
 .navigation-bar .router-link-exact-active {
   color: #3498db;
   border-bottom: 2px solid #3498db;
   padding-bottom: 2px;
 }
 
-/* 과제페이지 스타일 - 고정폭(600px)을 유연한 반응형(100%)으로 개편 */
-.dashboard-wrapper {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  box-sizing: border-box;
+/* 단위 변경 토글 버튼 */
+.toggle-btn {
+  padding: 6px 10px;
+  background-color: #4b6584;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
+.toggle-btn:hover {
+  background-color: #3b526f;
+}
+
+/* 4. 검색창 및 날씨 카드 목록 */
 .search-box,
 .list-box {
   background: #f8f9fa;
@@ -107,53 +151,8 @@
   padding: 8px;
   width: 90%;
   font-size: 14px;
-}
-
-.weather-card {
-  background: #fff;
-  border: 1px solid #dee2e6;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-}
-
-.badge {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 12px;
   border-radius: 4px;
-  color: #fff;
-}
-
-.hot {
-  background-color: #ff7675;
-}
-
-.cool {
-  background-color: #74b9ff;
-}
-
-.btn-detail {
-  position: absolute;
-  right: 12px;
-  top: 15px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-
-.status-bar {
-  background: #e8f5e9;
-  padding: 10px;
-  text-align: center;
-  color: #2e7d32;
-  font-weight: bold;
-  border-radius: 6px;
-}
-
-.list-box {
-  margin-top: 16px;
+  border: 1px solid #ced4da;
 }
 
 .weather-card {
@@ -163,6 +162,13 @@
   padding: 16px;
   margin-bottom: 12px;
   cursor: pointer;
+  position: relative;
+}
+
+.weather-card.selected {
+  border: 2px solid #3b82f6 !important;
+  background-color: #eff6ff !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25) !important;
 }
 
 .weather-card h4 {
@@ -184,33 +190,16 @@
   margin-top: 4px;
 }
 
-.badge.hot {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-.badge.warm {
-  background: #ffedd5;
-  color: #ea580c;
-}
-
-.badge.pleasant {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-.badge.chilly {
-  background: #e0f2fe;
-  color: #0284c7;
-}
-
-.badge.cold {
-  background: #f1f5f9;
-  color: #475569;
-}
+.badge.hot { background: #fee2e2; color: #dc2626; }
+.badge.warm { background: #ffedd5; color: #ea580c; }
+.badge.pleasant { background: #dcfce7; color: #16a34a; }
+.badge.chilly { background: #e0f2fe; color: #0284c7; }
+.badge.cold { background: #f1f5f9; color: #475569; }
 
 .btn-detail {
-  margin-top: 8px;
+  position: absolute;
+  right: 12px;
+  top: 15px;
   padding: 6px 12px;
   border-radius: 6px;
   border: none;
@@ -225,11 +214,116 @@
   background: #0369a1;
 }
 
+.status-bar {
+  background: #e8f5e9;
+  padding: 10px;
+  text-align: center;
+  color: #2e7d32;
+  font-weight: bold;
+  border-radius: 6px;
+  margin-top: 15px;
+}
+
+.noSearchResult {
+  color: #cc3433 !important;
+  padding: 10px 0;
+  font-size: large;
+  text-align: center;
+}
+
+/* 5. 뷰 컴포넌트 전용 클래스 (Detail, About, NotFound) */
+.info-card {
+  background: #f8fafc;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin: 15px 0;
+}
+
+.back-btn {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: #2563eb;
+}
+
+.description-box {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  line-height: 1.5;
+  font-size: 14px;
+  border: 1px solid #e9ecef;
+}
+
+.home-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.home-btn:hover {
+  background-color: #2980b9;
+}
+
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  background-color: #f8f9fa;
+  font-family: 'Noto Sans KR', sans-serif;
+  border-radius: 12px;
+}
+
+.not-found-content {
+  text-align: center;
+  background-color: #ffffff;
+  padding: 50px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.error-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+}
+
+.home-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.home-button:hover {
+  background-color: #0056b3;
+}
+
 /* ==========================================================================
-   ExerciseApp 다크 모드 연동 (html.dark)
+   다크 모드 통합 가버넌스 (html.dark)
    ========================================================================== */
 html.dark .app-container {
   background-color: #0f172a;
+  border-color: #334155;
   color: #f8fafc;
 }
 
@@ -259,40 +353,70 @@ html.dark .weather-card {
   color: #f8fafc;
 }
 
-html.dark .weather-card h4 {
-  color: #f8fafc !important;
+html.dark .weather-card.selected {
+  background-color: #10243f !important;
+  border-color: #60a5fa !important;
 }
 
-html.dark .weather-card p {
-  color: #cbd5e1 !important;
+html.dark .weather-card h4 { color: #f8fafc !important; }
+html.dark .weather-card p { color: #cbd5e1 !important; }
+
+html.dark .status-bar {
+  background: #14532d;
+  color: #86efac;
 }
 
-/* 뱃지 다크모드 고유 텍스트/배경색 보존 */
-html.dark .badge.hot { background: #fee2e2 !important; color: #dc2626 !important; }
-html.dark .badge.warm { background: #ffedd5 !important; color: #ea580c !important; }
-html.dark .badge.pleasant { background: #dcfce7 !important; color: #16a34a !important; }
-html.dark .badge.chilly { background: #e0f2fe !important; color: #0284c7 !important; }
-html.dark .badge.cold { background: #f1f5f9 !important; color: #475569 !important; }
-
-/* navigation-bar 라우터 네비게이션 다크 모드 */
 html.dark .navigation-bar {
   background-color: #1e293b !important;
-  border: 1px solid #334155;
+  border-color: #334155;
 }
 
-html.dark .nav-item {
-  color: #94a3b8 !important;
-}
-
-html.dark .nav-item:hover {
-  color: #f8fafc !important;
-}
-
-html.dark .divider {
-  color: #475569 !important;
-}
-
+html.dark .nav-item { color: #94a3b8 !important; }
+html.dark .nav-item:hover { color: #f8fafc !important; }
+html.dark .divider { color: #475569 !important; }
 html.dark .navigation-bar .router-link-exact-active {
   color: #60a5fa !important;
   border-bottom-color: #60a5fa !important;
 }
+
+html.dark .info-card {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .info-card h4,
+html.dark .info-card p,
+html.dark .info-card strong {
+  color: #f8fafc !important;
+}
+
+html.dark .description-box {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .description-box p,
+html.dark .description-box li {
+  color: #f8fafc !important;
+}
+
+html.dark .description-box code {
+  background-color: #334155 !important;
+  color: #fbbf24 !important;
+}
+
+html.dark .not-found-container {
+  background-color: #0f172a !important;
+}
+
+html.dark .not-found-content {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+html.dark .not-found-content h2 { color: #f8fafc !important; }
+html.dark .not-found-content p { color: #cbd5e1 !important; }
+html.dark .home-button { background-color: #3b82f6 !important; color: #ffffff !important; }
+html.dark .home-button:hover { background-color: #2563eb !important; }

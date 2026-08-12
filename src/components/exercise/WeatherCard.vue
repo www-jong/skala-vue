@@ -68,18 +68,3 @@ const displayFeelTemp = computed(() => {
   </div>
 
 </template>
-
-<style scoped>
-.weather-card.selected {
-  border: 2px solid #3b82f6 !important;
-  background-color: #eff6ff !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25) !important;
-  /*transform: translateY(-1px);*/
-}
-
-/* 다크 모드 선택된 카드 강조 */
-html.dark .weather-card.selected {
-  background-color: #10243f !important;
-  border-color: #60a5fa !important;
-}
-</style>

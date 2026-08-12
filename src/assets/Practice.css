@@ -1,4 +1,11 @@
 
+/* 글로벌 테마 트랜지션 (라이트/다크모드 전환 시 전 영역 일괄 부드럽게) */
+*,
+*::before,
+*::after {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
 /* 최상위 컨테이너 중앙 정렬 및 배경 세팅 */
 div.practice-container {
   max-width: 1200px;

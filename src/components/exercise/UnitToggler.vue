@@ -11,15 +11,3 @@ const configStore = useConfigStore()
     <button @click="configStore.toggleUnit" class="toggle-btn">단위변경</button>
   </div>
 </template>
-
-<style scoped>
-.toggle-btn {
-  padding: 6px 10px;
-  background-color: #4b6584;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-</style>

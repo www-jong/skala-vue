@@ -189,39 +189,3 @@ watchEffect(() => {
     </div>
   </div>
 </template>
-<style scoped>
-.status-bar {
-  background: #e8f5e9;
-  padding: 10px;
-  text-align: center;
-  color: #2e7d32;
-  font-weight: bold;
-  border-radius: 6px;
-  margin-top: 15px;
-}
-
-html.dark .status-bar {
-  background: #14532d;
-  color: #86efac;
-}
-
-.weather-card.selected {
-  border: 2px solid #3b82f6 !important;
-  background-color: #eff6ff !important;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25) !important;
-  /*transform: translateY(-1px);*/
-}
-
-/* 다크 모드 선택된 카드 강조 */
-html.dark .weather-card.selected {
-  background-color: #10243f !important;
-  border-color: #60a5fa !important;
-}
-
-.noSearchResult {
-  color: #cc3433 !important;
-  padding: 10px 0;
-  font-size: large;
-  text-align: center
-}
-</style>
