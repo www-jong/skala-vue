@@ -667,3 +667,284 @@ html.dark .search-clear-btn:hover {
   background-color: #475569;
   color: #ffffff;
 }
+
+/* ==========================================================================
+   WeatherDetailView 및 WeatherAboutView 모던 레이아웃 스타일
+   ========================================================================== */
+.detail-header-nav,
+.about-header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.detail-header-nav h2,
+.about-header-nav h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Detail Hero Card */
+.detail-hero-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.location-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.city-id-tag {
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.country-tag {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.location-full-name {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+}
+
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.hero-temp-group {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.hero-main-temp {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.hero-unit {
+  font-size: 1.8rem;
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.hero-feels-like {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  background: #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 14px;
+}
+
+/* Detail Metric Grid */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.detail-metric-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.metric-icon {
+  font-size: 2rem;
+}
+
+.metric-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metric-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.metric-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.detail-empty-card {
+  text-align: center;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 40px 20px;
+  border-radius: 16px;
+  color: #991b1b;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+/* About Section Styles */
+.about-hero-card {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.about-lead {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #1e40af;
+  margin: 0;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.about-feature-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.feature-icon {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.about-feature-card h4 {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin: 0 0 8px 0 !important;
+}
+
+.about-feature-card p {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #475569;
+  margin: 0;
+}
+
+.about-tech-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.about-tech-section h4 {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin: 0 0 12px 0 !important;
+}
+
+.tech-badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-badge {
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* Detail & About 다크모드 대응 */
+html.dark .detail-header-nav h2,
+html.dark .about-header-nav h2 {
+  color: #f8fafc !important;
+}
+
+html.dark .detail-hero-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-color: #334155;
+}
+
+html.dark .location-full-name { color: #f8fafc !important; }
+html.dark .hero-main-temp { color: #f8fafc !important; }
+html.dark .hero-unit { color: #60a5fa !important; }
+html.dark .hero-feels-like { background: #334155; color: #cbd5e1; }
+
+html.dark .detail-metric-card,
+html.dark .about-feature-card,
+html.dark .about-tech-section {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .metric-label { color: #94a3b8; }
+html.dark .metric-value { color: #f8fafc; }
+
+html.dark .about-hero-card {
+  background: #1e3a8a;
+  border-color: #1e40af;
+}
+
+html.dark .about-lead { color: #dbeafe; }
+
+html.dark .about-feature-card h4,
+html.dark .about-tech-section h4 {
+  color: #f8fafc !important;
+}
+
+html.dark .about-feature-card p {
+  color: #cbd5e1;
+}
+
+html.dark .tech-badge {
+  background: #2563eb;
+  color: #ffffff;
+}

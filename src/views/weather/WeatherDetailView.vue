@@ -42,28 +42,86 @@ const displayFeelTemp = computed(() => {
   }
   return rawTemp
 })
-
 </script>
 
 <template>
-  <div class="practice-section">
-    <h2>📊 지역별 상세 기상 관측 정보</h2>
+  <div class="detail-container-box">
+    <div class="detail-header-nav">
+      <h2>📊 지역별 상세 기상 관측 정보</h2>
+      <button @click="router.push('/exercise')" class="back-btn">← 대시보드로 돌아가기</button>
+    </div>
     <hr />
 
-    <div v-if="cityData" class="info-card">
-      <h4>📍 지정 지역: [{{ cityData.country }}] {{ cityData.region }} {{ cityData.name }}</h4>
-      <p>도시 고유 ID: <strong>{{ route.params.cityId }}</strong></p>
-      <p>실시간 기온: <strong>{{ displayTemp }}{{ configStore.unitSymbol }}</strong> (체감: {{ displayFeelTemp }}{{
-        configStore.unitSymbol }}</p>
-      <p>기상 현황: <strong>{{ cityData.status }}</strong></p>
-      <p>대기 습도: <strong>{{ cityData.humidity }}</strong></p>
-      <p>위도 / 경도: <strong>{{ cityData.lat }} / {{ cityData.lon }}</strong></p>
+    <div v-if="cityData" class="detail-main-wrapper">
+      <!-- 상단 메인 기온 히어로 카운터 -->
+      <div class="detail-hero-card">
+        <div class="hero-left">
+          <div class="location-badge-wrap">
+            <span class="city-id-tag">ID: {{ route.params.cityId }}</span>
+            <span class="country-tag">[{{ cityData.country }}]</span>
+          </div>
+          <h3 class="location-full-name">📍 {{ cityData.region }} {{ cityData.name }}</h3>
+        </div>
+
+        <div class="hero-right">
+          <div class="hero-temp-group">
+            <span class="hero-main-temp">{{ displayTemp }}<span class="hero-unit">{{ configStore.unitSymbol }}</span></span>
+            <span class="hero-feels-like">체감 {{ displayFeelTemp }}{{ configStore.unitSymbol }}</span>
+          </div>
+          <div class="hero-status-badge">
+            <span v-if="cityData.temp >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>
+            <span v-else-if="cityData.temp >= 25" class="badge warm">☀️ 더움 (25°C 이상)</span>
+            <span v-else-if="cityData.temp >= 18" class="badge pleasant">🌿 쾌적 (18°C 이상)</span>
+            <span v-else-if="cityData.temp >= 10" class="badge chilly">🧥 쌀쌀 (10°C 이상)</span>
+            <span v-else class="badge cold">❄️ 한파 (10°C 미만)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 세부 기상 항목 2x2 그리드 -->
+      <div class="detail-grid">
+        <div class="detail-metric-card">
+          <span class="metric-icon">☀️</span>
+          <div class="metric-info">
+            <span class="metric-label">현재 기상 상태</span>
+            <span class="metric-value">{{ cityData.status }}</span>
+          </div>
+        </div>
+
+        <div class="detail-metric-card">
+          <span class="metric-icon">💧</span>
+          <div class="metric-info">
+            <span class="metric-label">대기 습도</span>
+            <span class="metric-value">{{ cityData.humidity }}</span>
+          </div>
+        </div>
+
+        <div class="detail-metric-card">
+          <span class="metric-icon">🌐</span>
+          <div class="metric-info">
+            <span class="metric-label">위도 (Latitude)</span>
+            <span class="metric-value">{{ cityData.lat }}° N</span>
+          </div>
+        </div>
+
+        <div class="detail-metric-card">
+          <span class="metric-icon">🧭</span>
+          <div class="metric-info">
+            <span class="metric-label">경도 (Longitude)</span>
+            <span class="metric-value">{{ cityData.lon }}° E</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div v-else class="info-card">
-      <p style="color: #ef4444; margin: 0;">😫 해당 도시 (ID: {{ route.params.cityId }})의 데이터가 존재하지 않습니다.</p>
+    <!-- 데이터 없음 예외 상태 카드 -->
+    <div v-else class="detail-empty-card">
+      <span class="empty-icon">😫</span>
+      <h3>해당 도시 정보를 찾을 수 없습니다.</h3>
+      <p>요청하신 도시 고유 ID (<strong>{{ route.params.cityId }}</strong>)의 기상 데이터가 존재하지 않습니다.</p>
+      <button @click="router.push('/exercise')" class="back-btn" style="margin-top: 15px;">
+        ← 메인 대시보드로 돌아가기
+      </button>
     </div>
-
-    <button @click="router.push('/exercise')" class="back-btn">← 메인 대시보드로 돌아가기</button>
   </div>
 </template>
