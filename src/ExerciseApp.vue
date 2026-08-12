@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import WeatherMockup from './components/exercise/WeatherMockup.vue'
-import WeatherComposition from './components/exercise/WeatherComposition.vue'
-
+import WeatherMockup from '@/components/exercise/WeatherMockup.vue'
+import WeatherComposition from '@/components/exercise/WeatherComposition.vue'
+import WeatherParent from '@/components/exercise/WeatherParent.vue'
 // 과제 하위 서브 탭 상태 ('ex1' | 'ex2')
 const subTab = ref('ex1')
 </script>
@@ -17,12 +17,16 @@ const subTab = ref('ex1')
       <button :class="['sub-nav-btn', { active: subTab === 'ex2' }]" @click="subTab = 'ex2'">
         과제 2: 날씨 현황 (Composition API)
       </button>
+      <button :class="['sub-nav-btn', { active: subTab === 'ex3' }]" @click="subTab = 'ex3'">
+        과제 3: 날씨 (Component)
+      </button>
     </div>
 
     <!-- 서브 탭별 과제 뷰 전환 -->
     <main class="exercise-content">
       <WeatherMockup v-if="subTab === 'ex1'" />
       <WeatherComposition v-else-if="subTab === 'ex2'" />
+      <WeatherParent v-else-if="subTab === 'ex3'" />
     </main>
   </div>
 </template>

@@ -18,7 +18,7 @@ const weatherList = ref([
       condition: {
         text: '맑음',
         code: 1000,
-        icon: 'sunny'                                         
+        icon: 'sunny'
       }
     }
   },
@@ -121,8 +121,9 @@ const showDetail = (cityName, status) => {
 
     <section class="search-box">
       <h3>🔍 도시 검색</h3>
-      <input type="text" :value="searchQuery" @input="(e) => (searchQuery = e.target.value)" placeholder="검색할 도시 입력" />
-      <p>검색 중인 도시 : <strong>{{ searchQuery }}</strong></p>
+      <input type="text" :value="searchQuery" @input="(e) => (searchQuery = e.target.value)"
+        placeholder="검색할 나라, 지역, 도시명 입력" />
+      <p>검색 중인 도시 : <strong>{{ searchQuery || '전체 보기' }}</strong></p>
     </section>
 
     <section class="list-box">
@@ -132,7 +133,8 @@ const showDetail = (cityName, status) => {
           selectedCityId = item.location.id;
         selectedCityInfo = `${item.location.region} ${item.location.name}이(가) 선택되었습니다.`">
         <h4>
-          {{ item.location.region }} {{ item.location.name }} ({{ item.current.condition.text }})
+          [{{ item.location.country }}] {{ item.location.region }} {{ item.location.name }}
+          ({{ item.current.condition.text }})
         </h4>
         <p>현재 기온: {{ item.current.temp_c }}°C (체감: {{ item.current.feels_like_c }}°C)</p>
 
