@@ -119,10 +119,32 @@ const showDetail = (cityName, status) => {
   <div class="practice-section">
 
     <section class="search-box">
-      <h3>🔍 도시 검색</h3>
-      <input type="text" :value="searchQuery" @input="(e) => (searchQuery = e.target.value)"
-        placeholder="검색할 나라, 지역, 도시명 입력" />
-      <p>검색 중인 도시 : <strong>{{ searchQuery || '전체 보기' }}</strong></p>
+      <div class="search-header">
+        <h3>🔍 도시 검색</h3>
+        <span :class="['search-badge', { active: searchQuery }]">
+          {{ searchQuery ? `"${searchQuery}" 검색 중` : '전체 보기' }}
+        </span>
+      </div>
+
+      <div class="search-input-container">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="modern-search-input"
+          :value="searchQuery"
+          @input="(e) => (searchQuery = e.target.value)"
+          placeholder="검색할 나라, 지역, 도시명 입력..."
+        />
+        <button
+          v-if="searchQuery"
+          type="button"
+          class="search-clear-btn"
+          @click="searchQuery = ''"
+          title="검색어 지우기"
+        >
+          ✕
+        </button>
+      </div>
     </section>
 
     <section class="list-box">
