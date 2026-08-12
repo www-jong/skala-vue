@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 const count = ref(0)
 const showAlert = () => {
-  alert('스크립트 함수가 성공적으로 호출되었습니다.')
+  alert('우사기야 퍼즐 맞추자!!!!!!.')
 }
 </script>
 

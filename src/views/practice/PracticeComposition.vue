@@ -1,9 +1,9 @@
 <script setup>
-import ReactiveRef from '../../components/practices/composition/ReactiveRef.vue'
-import ReactiveReactive from '../../components/practices/composition/ReactiveReactive.vue'
+import ReactiveRef from '@/components/practices/composition/ReactiveRef.vue'
+import ReactiveReactive from '@/components/practices/composition/ReactiveReactive.vue'
 
-import ComputedBasic from '../../components/practices/composition/ComputedBasic.vue'
-import WatcherBasic from '../../components/practices/composition/WatcherBasic.vue'
+import ComputedBasic from '@/components/practices/composition/ComputedBasic.vue'
+import WatcherBasic from '@/components/practices/composition/WatcherBasic.vue'
 import WatcherMulti from '@/components/practices/composition/WatcherMulti.vue'
 import WatcherDeep from '@/components/practices/composition/WatcherDeep.vue';
 import WatcherReactive from '@/components/practices/composition/WatcherReactive.vue'

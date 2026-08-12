@@ -18,7 +18,7 @@ const weatherList = ref([
       condition: {
         text: '맑음',
         code: 1000,
-        icon: 'sunny'
+        icon: 'sunny'                                         
       }
     }
   },

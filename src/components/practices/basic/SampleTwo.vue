@@ -1,6 +1,6 @@
 <script setup>
 // import { ref } from 'vue'
-const playerName = '원종'
+const playerName = '우사기'
 const welcomeMessage = '반갑습니다.'
 </script>
 
