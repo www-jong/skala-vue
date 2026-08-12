@@ -42,8 +42,7 @@ const handleMouseMove = (e) => {
     <br /><br />
 
     <h3>2) 실시간 마우스 이동 좌표 추적 (@mousemove)</h3>
-    <div @mousemove="handleMouseMove"
-      style="padding: 20px; background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 6px;">
+    <div @mousemove="handleMouseMove" class="mouse-tracker-box">
       이 박스 안에서 마우스를 움직이세요.
       <br />
       <strong>실시간 좌표: X = {{ mouseX }}px, Y = {{ mouseY }}px</strong>

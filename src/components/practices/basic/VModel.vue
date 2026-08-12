@@ -12,7 +12,7 @@ const text2 = ref('')
 
     <hr />
 
-    <div style="background: #f8fafc; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+    <div class="vmodel-info-box">
       <p><strong>v-model의 2가지 동작 원리 (:value + @input 수동 바인딩):</strong></p>
       <p>1. JS -> 화면: :value 속성을 통해 상태 값을 입력창에 전달 (단방향)</p>
       <p>2. 화면 -> JS: @input 이벤트를 통해 입력된 $event.target.value 값을 상태에 반영</p>

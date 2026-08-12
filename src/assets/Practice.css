@@ -231,3 +231,64 @@ html.dark th {
 html.dark hr {
   background: #334155 !important;
 }
+
+/* 실습 박스 및 폼 요소 다크모드 대응 */
+.mouse-tracker-box {
+  padding: 20px;
+  background: #f1f5f9;
+  border: 1px dashed #94a3b8;
+  border-radius: 6px;
+}
+
+.vmodel-info-box {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+textarea,
+select {
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #2c3e50;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  outline: none;
+}
+
+textarea:focus,
+select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+html.dark .mouse-tracker-box {
+  background: #0f172a !important;
+  border-color: #475569 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .parent {
+  background-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .vmodel-info-box {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark textarea,
+html.dark select,
+html.dark input[type='text'],
+html.dark input[type='number'],
+html.dark input[type='email'],
+html.dark input[type='password'] {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
