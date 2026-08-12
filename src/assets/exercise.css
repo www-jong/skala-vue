@@ -952,3 +952,65 @@ html.dark .tech-badge {
   background: #2563eb;
   color: #ffffff;
 }
+
+/* 단일 캡슐 온도 단위 토글 버튼 스타일 */
+.single-unit-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.06);
+  color: #4f46e5;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.08);
+}
+
+.single-unit-toggle-btn:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  color: #ffffff;
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+.single-unit-toggle-btn:active {
+  transform: scale(0.96);
+}
+
+.unit-pill-badge {
+  background: #ffffff;
+  color: #4f46e5;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.single-unit-toggle-btn:hover .unit-pill-badge {
+  background: #ffffff;
+  color: #4338ca;
+}
+
+html.dark .single-unit-toggle-btn {
+  background: rgba(129, 140, 248, 0.12);
+  border-color: rgba(129, 140, 248, 0.25);
+  color: #818cf8;
+}
+
+html.dark .single-unit-toggle-btn:hover {
+  background: linear-gradient(135deg, #6366f1 0%, #2dd4bf 100%);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+html.dark .unit-pill-badge {
+  background: #0d121d;
+  color: #2dd4bf;
+  border-color: rgba(129, 140, 248, 0.25);
+}

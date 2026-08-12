@@ -2,32 +2,30 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useConfigStore } from '@/stores/configStore'
+import { useWeatherStore } from '@/stores/weatherStore'
+import { weatherService } from '@/services/weatherService'
 
 const route = useRoute()
 const router = useRouter()
 const configStore = useConfigStore()
-
-// 사용자님의 5개 도시 데이터 (loc_01 ~ loc_05) 맵핑
-const mockDetails = {
-  loc_01: { country: '대한민국', region: '서울특별시', name: '강남구', temp: 28, feelsLike: 29.5, status: '맑음', humidity: '60%', lat: 37.5172, lon: 127.0473 },
-  loc_02: { country: '대한민국', region: '울산광역시', name: '남구', temp: 30, feelsLike: 32.1, status: '구름조금', humidity: '70%', lat: 35.5439, lon: 129.3301 },
-  loc_03: { country: '대한민국', region: '부산광역시', name: '해운대구', temp: 23, feelsLike: 24.8, status: '흐림', humidity: '80%', lat: 35.1631, lon: 129.1636 },
-  loc_04: { country: '대한민국', region: '경기도', name: '수원시', temp: 16, feelsLike: 17.0, status: '비', humidity: '85%', lat: 37.2636, lon: 127.0286 },
-  loc_05: { country: '대한민국', region: '제주특별자치도', name: '제주시', temp: 9, feelsLike: 10.0, status: '맑음', humidity: '65%', lat: 33.4996, lon: 126.5312 }
-}
+const weatherStore = useWeatherStore()
 
 const cityData = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
   const id = route.params.cityId
-  if (mockDetails[id]) {
-    cityData.value = mockDetails[id]
+  if (weatherStore.displayList.length === 0) {
+    await weatherStore.initWeather()
+  }
+  const found = await weatherService.getCityById(id, weatherStore.displayList)
+  if (found) {
+    cityData.value = found
   }
 })
 
 const displayTemp = computed(() => {
   if (!cityData.value) return 0
-  const rawTemp = cityData.value.temp
+  const rawTemp = cityData.value.current.temp_c
   if (configStore.unit === 'fahrenheit') {
     return Math.round((rawTemp * 9) / 5 + 32)
   }
@@ -36,19 +34,36 @@ const displayTemp = computed(() => {
 
 const displayFeelTemp = computed(() => {
   if (!cityData.value) return 0
-  const rawTemp = cityData.value.feelsLike
+  const rawTemp = cityData.value.current.feels_like_c
   if (configStore.unit === 'fahrenheit') {
     return Math.round((rawTemp * 9) / 5 + 32)
   }
   return rawTemp
 })
+
+const formattedLocation = computed(() => {
+  if (!cityData.value) return ''
+  const { country, region, name } = cityData.value.location
+  if (!region || region === name) {
+    return `[${country}] ${name}`
+  }
+  return `[${country}] ${region} ${name}`
+})
+
+const handleBack = () => {
+  if (window.history.length > 1) {
+    router.back()
+  } else {
+    router.push('/')
+  }
+}
 </script>
 
 <template>
   <div class="detail-container-box">
     <div class="detail-header-nav">
       <h2>📊 지역별 상세 기상 관측 정보</h2>
-      <button @click="router.push('/exercise')" class="back-btn">← 대시보드로 돌아가기</button>
+      <button @click="handleBack" class="back-btn">← 대시보드로 돌아가기</button>
     </div>
     <hr />
 
@@ -58,9 +73,9 @@ const displayFeelTemp = computed(() => {
         <div class="hero-left">
           <div class="location-badge-wrap">
             <span class="city-id-tag">ID: {{ route.params.cityId }}</span>
-            <span class="country-tag">[{{ cityData.country }}]</span>
+            <span class="country-tag">[{{ cityData.location.country }}]</span>
           </div>
-          <h3 class="location-full-name">📍 {{ cityData.region }} {{ cityData.name }}</h3>
+          <h3 class="location-full-name">📍 {{ formattedLocation }}</h3>
         </div>
 
         <div class="hero-right">
@@ -69,10 +84,10 @@ const displayFeelTemp = computed(() => {
             <span class="hero-feels-like">체감 {{ displayFeelTemp }}{{ configStore.unitSymbol }}</span>
           </div>
           <div class="hero-status-badge">
-            <span v-if="cityData.temp >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>
-            <span v-else-if="cityData.temp >= 25" class="badge warm">☀️ 더움 (25°C 이상)</span>
-            <span v-else-if="cityData.temp >= 18" class="badge pleasant">🌿 쾌적 (18°C 이상)</span>
-            <span v-else-if="cityData.temp >= 10" class="badge chilly">🧥 쌀쌀 (10°C 이상)</span>
+            <span v-if="cityData.current.temp_c >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>
+            <span v-else-if="cityData.current.temp_c >= 25" class="badge warm">☀️ 더움 (25°C 이상)</span>
+            <span v-else-if="cityData.current.temp_c >= 18" class="badge pleasant">🌿 쾌적 (18°C 이상)</span>
+            <span v-else-if="cityData.current.temp_c >= 10" class="badge chilly">🧥 쌀쌀 (10°C 이상)</span>
             <span v-else class="badge cold">❄️ 한파 (10°C 미만)</span>
           </div>
         </div>
@@ -84,7 +99,7 @@ const displayFeelTemp = computed(() => {
           <span class="metric-icon">☀️</span>
           <div class="metric-info">
             <span class="metric-label">현재 기상 상태</span>
-            <span class="metric-value">{{ cityData.status }}</span>
+            <span class="metric-value">{{ cityData.current.condition.text }}</span>
           </div>
         </div>
 
@@ -92,23 +107,23 @@ const displayFeelTemp = computed(() => {
           <span class="metric-icon">💧</span>
           <div class="metric-info">
             <span class="metric-label">대기 습도</span>
-            <span class="metric-value">{{ cityData.humidity }}</span>
+            <span class="metric-value">{{ cityData.current.humidity }}%</span>
+          </div>
+        </div>
+
+        <div class="detail-metric-card">
+          <span class="metric-icon">💨</span>
+          <div class="metric-info">
+            <span class="metric-label">풍속 (Wind Speed)</span>
+            <span class="metric-value">{{ cityData.current.wind_kph }} km/h</span>
           </div>
         </div>
 
         <div class="detail-metric-card">
           <span class="metric-icon">🌐</span>
           <div class="metric-info">
-            <span class="metric-label">위도 (Latitude)</span>
-            <span class="metric-value">{{ cityData.lat }}° N</span>
-          </div>
-        </div>
-
-        <div class="detail-metric-card">
-          <span class="metric-icon">🧭</span>
-          <div class="metric-info">
-            <span class="metric-label">경도 (Longitude)</span>
-            <span class="metric-value">{{ cityData.lon }}° E</span>
+            <span class="metric-label">위도 / 경도</span>
+            <span class="metric-value">{{ cityData.location.lat }}° N / {{ cityData.location.lon }}° E</span>
           </div>
         </div>
       </div>
@@ -119,7 +134,7 @@ const displayFeelTemp = computed(() => {
       <span class="empty-icon">😫</span>
       <h3>해당 도시 정보를 찾을 수 없습니다.</h3>
       <p>요청하신 도시 고유 ID (<strong>{{ route.params.cityId }}</strong>)의 기상 데이터가 존재하지 않습니다.</p>
-      <button @click="router.push('/exercise')" class="back-btn" style="margin-top: 15px;">
+      <button @click="handleBack" class="back-btn" style="margin-top: 15px;">
         ← 메인 대시보드로 돌아가기
       </button>
     </div>

@@ -6,7 +6,18 @@ import WeatherHomeView from '@/views/weather/WeatherHomeView.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/practice',
+    name: 'MainWeatherHome',
+    component: WeatherHomeView,
+  },
+  {
+    path: '/weather/:cityId',
+    name: 'MainWeatherDetail',
+    component: () => import('@/views/weather/WeatherDetailView.vue'),
+  },
+  {
+    path: '/about',
+    name: 'MainWeatherAbout',
+    component: () => import('@/views/weather/WeatherAboutView.vue'),
   },
   {
     path: '/practice',
@@ -15,22 +26,13 @@ const routes = [
   },
   {
     path: '/exercise',
+    name: 'Exercise',
     component: ExerciseApp,
     children: [
       {
         path: '',
-        name: 'WeatherHome',
-        component: WeatherHomeView,
-      },
-      {
-        path: '/about',
-        name: 'WeatherAbout',
-        component: () => import('@/views/weather/WeatherAboutView.vue'),
-      },
-      {
-        path: '/weather/:cityId',
-        name: 'WeatherDetail',
-        component: () => import('@/views/weather/WeatherDetailView.vue'),
+        name: 'ExerciseWeatherHome',
+        component: () => import('@/components/exercise/WeatherParent.vue'),
       },
     ],
   },

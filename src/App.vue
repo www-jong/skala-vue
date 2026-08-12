@@ -18,16 +18,22 @@ const route = useRoute()
     <nav class="nav-bar">
       <div class="nav-tabs">
         <RouterLink
+          to="/"
+          :class="['nav-btn', { active: route.path === '/' || route.path === '/about' || (route.path.startsWith('/weather') && !route.path.startsWith('/exercise')) }]"
+        >
+          🌦️ 날씨 앱
+        </RouterLink>
+        <RouterLink
           to="/practice"
           :class="['nav-btn', { active: route.path === '/practice' }]"
         >
-          PracticeApp(실습)
+          📚 PracticeApp(실습)
         </RouterLink>
         <RouterLink
           to="/exercise"
-          :class="['nav-btn', { active: route.path.startsWith('/exercise') || route.path === '/about' || route.path.startsWith('/weather') }]"
+          :class="['nav-btn', { active: route.path.startsWith('/exercise') }]"
         >
-          ExerciseApp(과제)
+          📝 ExerciseApp(과제)
         </RouterLink>
       </div>
 
