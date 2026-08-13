@@ -75,7 +75,8 @@ const startDownload = () => {
       <div class="card-body">
         <div class="input-group">
           <span>이메일 주소:</span>
-          <el-input v-model="userForm.email" placeholder="example@email.com" clearable style="width: 300px" />
+          <el-input v-model="userForm.email" placeholder="example@email.com" clearable style="width: 300px"
+            class="input" />
         </div>
 
         <div class="input-group">
@@ -100,7 +101,9 @@ const startDownload = () => {
           <el-rate v-model="productRate" show-score score-template="{value} 점" />
         </div>
 
-        <div class="result-preview">🟢 <strong>실시간 장부 요약:</strong> 선택 수량 {{ productQuantity }}개 / 내가 준 점수 {{ productRate }}점</div>
+        <div class="result-preview">🟢 <strong>실시간 장부 요약:</strong> 선택 수량 {{ productQuantity }}개 / 내가 준 점수 {{ productRate
+          }}점
+        </div>
       </div>
     </el-card>
 
@@ -128,36 +131,138 @@ const startDownload = () => {
   color: #909399;
   margin-bottom: 30px;
 }
+
 .box-card {
   margin-bottom: 25px;
   border-radius: 8px;
 }
+
 .card-body {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
+
 .input-group {
   display: flex;
   align-items: center;
   gap: 15px;
   font-size: 14px;
 }
+
 .hint-text {
   color: #909399;
   font-size: 12px;
 }
+
 .result-preview {
   background: #f4f4f5;
   padding: 10px;
   border-radius: 6px;
   font-size: 14px;
 }
+
 .btn-zone {
   display: flex;
   gap: 10px;
 }
+
 .progress-zone {
   margin-top: 10px;
+}
+
+html.dark .result-preview {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+html.dark .input-group {
+  color: #f8fafc !important;
+}
+
+html.dark .subtitle,
+html.dark .hint-text {
+  color: #94a3b8 !important;
+}
+</style>
+
+<!-- 💡 Element Plus 전역 컴포넌트 다크모드 오버라이드 스타일 (Unscoped Style) -->
+<style>
+html.dark .el-card {
+  --el-card-bg-color: #1e293b !important;
+  --el-card-border-color: #334155 !important;
+  --el-text-color-primary: #f8fafc !important;
+  --el-text-color-regular: #cbd5e1 !important;
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .el-card__header {
+  background-color: #1e293b !important;
+  border-bottom-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .el-card__body {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+/* [실습 1 & 실습 2] el-input 및 el-input-number 전용 다크모드 CSS 변수 및 셀렉터 오버라이드 */
+html.dark .el-input {
+  --el-input-bg-color: #0f172a !important;
+  --el-input-border-color: #334155 !important;
+  --el-input-hover-border-color: #38bdf8 !important;
+  --el-input-focus-border-color: #38bdf8 !important;
+  --el-input-text-color: #f8fafc !important;
+  --el-input-icon-color: #94a3b8 !important;
+  --el-input-placeholder-color: #64748b !important;
+  --el-fill-color-blank: #0f172a !important;
+  background-color: #0f172a !important;
+  border-radius: 4px;
+}
+
+html.dark .el-input__wrapper {
+  background-color: #0f172a !important;
+  background: #0f172a !important;
+  box-shadow: 0 0 0 1px #334155 inset !important;
+}
+
+html.dark .el-input__inner {
+  background-color: transparent !important;
+  color: #f8fafc !important;
+}
+
+/* [실습 2] el-input-number (수량 조절기) 다크모드 전용 오버라이드 */
+html.dark .el-input-number {
+  --el-input-bg-color: #0f172a !important;
+  --el-input-border-color: #334155 !important;
+  --el-input-number-decrease-border-color: #334155 !important;
+  --el-input-number-increase-border-color: #334155 !important;
+  --el-fill-color-light: #1e293b !important;
+  --el-fill-color-blank: #0f172a !important;
+  --el-border-color: #334155 !important;
+  background-color: #0f172a !important;
+  border-radius: 4px;
+}
+
+html.dark .el-input-number__decrease,
+html.dark .el-input-number__increase {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .el-input-number__decrease:hover,
+html.dark .el-input-number__increase:hover {
+  color: #38bdf8 !important;
+}
+
+/* [실습 2] el-rate (별점 평점 라벨) & [실습 1] el-switch & [실습 3] el-progress */
+html.dark .el-rate__text,
+html.dark .el-switch__label,
+html.dark .el-progress__text {
+  color: #f8fafc !important;
 }
 </style>
