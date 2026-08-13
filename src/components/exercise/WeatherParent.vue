@@ -113,7 +113,9 @@ const selectedCityInfo = ref('카드를 클릭하거나 검색해 보세요.')
 const selectedCityId = ref('')
 
 // 알림 대행 함수 (window 객체 격리 우회)
-const showDetail = (cityName, status) => {
+const showDetail = (cityItem) => {
+  const cityName = `${cityItem.location.region} ${cityItem.location.name}`
+  const status = cityItem.current.condition.text
   window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
 }
 

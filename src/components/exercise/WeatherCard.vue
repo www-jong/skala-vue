@@ -46,7 +46,7 @@ const displayFeelTemp = computed(() => {
       </h4>
       <button
         class="btn-detail"
-        @click.stop="emit('showDetail', cityItem.location.id)"
+        @click.stop="emit('showDetail', cityItem)"
       >
         상세보기 →
       </button>

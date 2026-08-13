@@ -110,9 +110,12 @@ const selectedCityId = ref('')
 
 
 // 알림 대행 함수 (window 객체 격리 우회)
-const showDetail = (cityName, status) => {
+const showDetail = (cityItem) => {
+  const cityName = `${cityItem.location.region} ${cityItem.location.name}`
+  const status = cityItem.current.condition.text
   window.alert(`${cityName}의 현재 날씨는 [${status}] 상태입니다.`)
 }
+
 </script>
 
 <template>
@@ -128,20 +131,9 @@ const showDetail = (cityName, status) => {
 
       <div class="search-input-container">
         <span class="search-icon">🔍</span>
-        <input
-          type="text"
-          class="modern-search-input"
-          :value="searchQuery"
-          @input="(e) => (searchQuery = e.target.value)"
-          placeholder="검색할 나라, 지역, 도시명 입력..."
-        />
-        <button
-          v-if="searchQuery"
-          type="button"
-          class="search-clear-btn"
-          @click="searchQuery = ''"
-          title="검색어 지우기"
-        >
+        <input type="text" class="modern-search-input" :value="searchQuery"
+          @input="(e) => (searchQuery = e.target.value)" placeholder="검색할 나라, 지역, 도시명 입력..." />
+        <button v-if="searchQuery" type="button" class="search-clear-btn" @click="searchQuery = ''" title="검색어 지우기">
           ✕
         </button>
       </div>
@@ -149,23 +141,16 @@ const showDetail = (cityName, status) => {
 
     <section class="list-box">
       <h3>지역별 날씨 현황</h3>
-      <div
-        v-for="item in weatherList"
-        :key="item.location.id"
-        :class="['weather-card', { selected: selectedCityId === item.location.id }]"
-        @click="
+      <div v-for="item in weatherList" :key="item.location.id"
+        :class="['weather-card', { selected: selectedCityId === item.location.id }]" @click="
           selectedCityId = item.location.id;
-          selectedCityInfo = `${item.location.region} ${item.location.name}이(가) 선택되었습니다.`
-        "
-      >
+        selectedCityInfo = `${item.location.region} ${item.location.name}이(가) 선택되었습니다.`
+          ">
         <div class="card-header">
           <h4 class="card-title">
             📍 [{{ item.location.country }}] {{ item.location.region }} {{ item.location.name }}
           </h4>
-          <button
-            class="btn-detail"
-            @click.stop="showDetail(item.location.name, item.current.condition.text)"
-          >
+          <button class="btn-detail" @click.stop="showDetail(item)">
             상세보기 →
           </button>
         </div>
