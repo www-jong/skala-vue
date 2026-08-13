@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
 import AppNavbar from '@/components/AppNavbar.vue'
-
+console.log(import.meta.env.VITE_API_URL)
 const isDarkmode = ref(false)
 const toggleTheme = () => {
   isDarkmode.value = !isDarkmode.value
