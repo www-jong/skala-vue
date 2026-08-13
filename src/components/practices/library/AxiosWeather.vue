@@ -61,8 +61,19 @@ const handleFetchWeather = async () => {
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   line-height: 1.8;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 .result-card strong {
   color: #0284c7;
+}
+
+html.dark .result-card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .result-card strong {
+  color: #38bdf8 !important;
 }
 </style>

@@ -196,4 +196,24 @@ button {
 button:hover {
   opacity: 0.9;
 }
+
+html.dark input {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .item-card {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark .title-text {
+  color: #f8fafc !important;
+}
+
+html.dark .id-tag {
+  color: #94a3b8 !important;
+}
 </style>

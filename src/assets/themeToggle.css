@@ -1,12 +1,16 @@
-/* 라이트모드 / 다크모드 3D 입체 스위치 버튼 전용 스타일 */
 .theme-toggle-container {
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .theme-toggle-label {
   height: 36px;
   width: 72px;
+  margin: 0;
   background-color: #ffffff;
   border-radius: 18px;
   -webkit-box-shadow: inset 0 0 5px 4px rgba(255, 255, 255, 1),
