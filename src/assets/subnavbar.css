@@ -100,6 +100,8 @@ html.dark .sub-nav-btn.active {
   box-shadow: 0 3px 10px rgba(79, 70, 229, 0.12);
   transition: all 0.2s ease;
   white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .sub-nav-dropdown-btn:hover {
@@ -113,6 +115,8 @@ html.dark .sub-nav-btn.active {
   font-weight: bold;
   transition: transform 0.25s ease;
   display: inline-block;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .select-arrow.open {
@@ -136,6 +140,8 @@ html.dark .sub-nav-btn.active {
   flex-direction: column;
   gap: 3px;
   z-index: 10000;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .sub-nav-dropdown-item {
@@ -151,6 +157,8 @@ html.dark .sub-nav-btn.active {
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .sub-nav-dropdown-item:hover,

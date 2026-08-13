@@ -1,11 +1,12 @@
 /**
  * Weather Service API Adapter Layer (OpenWeatherMap Integration)
- * 대한민국 주요 도시 10개 실시간 관측, 한글 매핑, 24시간/7일 예보 지원
+ * Direct Geocoding API (lat/lon & local_names.ko) + 2.5/weather 2단계 실시간 검색
  */
 
 const API_KEY = import.meta.env.VITE_OPEN_WEATHER_API
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
 const FORECAST_URL = 'https://api.openweathermap.org/data/2.5/forecast'
+const GEO_URL = 'https://api.openweathermap.org/geo/1.0/direct'
 
 // 대한민국 10개 주요 관측 도시 기본 메타 데이터 및 좌표 (loc_01 ~ loc_10)
 const defaultCitiesData = [
@@ -43,6 +44,8 @@ const koreanCityAlias = {
   제주시: 'Jeju',
   창원: 'Changwon',
   창원시: 'Changwon',
+  파주: 'Paju',
+  파주시: 'Paju',
   성남: 'Seongnam',
   고양: 'Goyang',
   용인: 'Yongin',
@@ -57,6 +60,53 @@ const koreanCityAlias = {
   런던: 'London',
   뉴욕: 'New York',
   시드니: 'Sydney',
+  베이징: 'Beijing',
+  상하이: 'Shanghai',
+  방콕: 'Bangkok',
+  싱가포르: 'Singapore',
+  로마: 'Rome',
+  베를린: 'Berlin',
+  마드리드: 'Madrid',
+  토론토: 'Toronto',
+  밴쿠버: 'Vancouver',
+}
+
+// 영문 도시명 -> 한글 지역명/지명 매핑 딕셔너리
+const englishToKoreanAlias = {
+  Seoul: { region: '서울특별시', name: '서울' },
+  Busan: { region: '부산광역시', name: '부산' },
+  Incheon: { region: '인천광역시', name: '인천' },
+  Daegu: { region: '대구광역시', name: '대구' },
+  Daejeon: { region: '대전광역시', name: '대전' },
+  Gwangju: { region: '광주광역시', name: '광주' },
+  Ulsan: { region: '울산광역시', name: '울산' },
+  Suwon: { region: '경기도', name: '수원시' },
+  Jeju: { region: '제주특별자치도', name: '제주시' },
+  Changwon: { region: '경상남도', name: '창원시' },
+  Paju: { region: '경기도', name: '파주시' },
+  Seongnam: { region: '경기도', name: '성남시' },
+  Goyang: { region: '경기도', name: '고양시' },
+  Yongin: { region: '경기도', name: '용인시' },
+  Cheongju: { region: '충청북도', name: '청주시' },
+  Jeonju: { region: '전라북도', name: '전주시' },
+  Cheonan: { region: '충청남도', name: '천안시' },
+  Ansan: { region: '경기도', name: '안산시' },
+  Anyang: { region: '경기도', name: '안양시' },
+  Pohang: { region: '경상북도', name: '포항시' },
+  Tokyo: { region: '일본', name: '도쿄' },
+  Paris: { region: '프랑스', name: '파리' },
+  London: { region: '영국', name: '런던' },
+  'New York': { region: '미국', name: '뉴욕' },
+  Sydney: { region: '호주', name: '시드니' },
+  Beijing: { region: '중국', name: '베이징' },
+  Shanghai: { region: '중국', name: '상하이' },
+  Bangkok: { region: '태국', name: '방콕' },
+  Singapore: { region: '싱가포르', name: '싱가포르' },
+  Rome: { region: '이탈리아', name: '로마' },
+  Berlin: { region: '독일', name: '베를린' },
+  Madrid: { region: '스페인', name: '마드리드' },
+  Toronto: { region: '캐나다', name: '토론토' },
+  Vancouver: { region: '캐나다', name: '밴쿠버' },
 }
 
 function getWeatherIcon(iconCode, description = '') {
@@ -197,58 +247,120 @@ export const weatherService = {
   },
 
   /**
-   * 글로벌 OpenWeatherMap 실시간 도시 검색 (한글 매핑 연동)
+   * Direct Geocoding API를 활용한 실시간 드롭다운 추천 목록 탐색
+   */
+  async fetchSuggestions(query) {
+    if (!query || !query.trim()) return []
+    const trimmed = query.trim()
+
+    // 단일 한글 자음/모음(ㅇ, ㅁ, ㄱ 등)일 경우 빈 배열 즉시 리턴
+    if (/^[\u3131-\u3163]+$/.test(trimmed)) {
+      return []
+    }
+
+    try {
+      const geoUrl = `${GEO_URL}?q=${encodeURIComponent(trimmed)}&limit=6&appid=${API_KEY}`
+      const geoRes = await fetch(geoUrl)
+      if (!geoRes.ok) return []
+
+      const geoList = await geoRes.json()
+      if (!geoList || geoList.length === 0) return []
+
+      return geoList.map((item, index) => {
+        const name = item.local_names?.ko || (englishToKoreanAlias[item.name] ? englishToKoreanAlias[item.name].name : item.name)
+        const region = item.state || (englishToKoreanAlias[item.name] ? englishToKoreanAlias[item.name].region : (item.country === 'KR' ? '대한민국' : item.country))
+        return {
+          id: `sug_${item.lat}_${item.lon}_${index}`,
+          country: item.country === 'KR' ? '대한민국' : item.country,
+          region,
+          name,
+          fullName: `[${item.country === 'KR' ? '대한민국' : item.country}] ${region} ${name}`,
+          lat: item.lat,
+          lon: item.lon,
+        }
+      })
+    } catch {
+      return []
+    }
+  },
+
+  /**
+   * 2단계 실시간 관측 도시 검색 (Direct Geocoding lat/lon 수신 -> Weather API 2차 호출)
    */
   async searchCities(query) {
     if (!query || !query.trim()) return []
     const trimmedQuery = query.trim()
 
+    // 로컬 기본 10개 관측 도시 매칭
     const localMatches = defaultCitiesData.filter((item) => {
       const fullText = `${item.location.country} ${item.location.region} ${item.location.name}`.toLowerCase()
       return fullText.includes(trimmedQuery.toLowerCase())
     })
 
+    // 단일 한글 자음/모음(ㅇ, ㅁ, ㄱ 등) 입력 시 로컬 매칭 결과만 전달
+    if (/^[\u3131-\u3163]+$/.test(trimmedQuery)) {
+      return localMatches
+    }
+
     try {
-      let searchTerm = trimmedQuery
-      for (const [k, v] of Object.entries(koreanCityAlias)) {
-        if (k.startsWith(trimmedQuery)) {
-          searchTerm = v
-          break
+      // 1단계: Direct Geocoding API를 통해 입력 도시의 lat, lon 및 local_names.ko 수신
+      const geoUrl = `${GEO_URL}?q=${encodeURIComponent(trimmedQuery)}&limit=5&appid=${API_KEY}`
+      const geoRes = await fetch(geoUrl)
+      if (!geoRes.ok) return localMatches
+
+      const geoList = await geoRes.json()
+      if (!geoList || geoList.length === 0) return localMatches
+
+      // 2단계: Geocoding으로 수신한 lat, lon 기반으로 2.5/weather 실시간 기상 관측 수신
+      const searchRequests = geoList.slice(0, 3).map(async (geoItem) => {
+        const { lat, lon } = geoItem
+        const weatherUrl = `${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`
+        const weatherRes = await fetch(weatherUrl)
+        if (!weatherRes.ok) return null
+
+        const weatherData = await weatherRes.json()
+
+        // 지명 및 지역 한글화 (local_names.ko > englishToKoreanAlias > geoItem.name)
+        const koreanName =
+          geoItem.local_names?.ko ||
+          (englishToKoreanAlias[geoItem.name] ? englishToKoreanAlias[geoItem.name].name : geoItem.name)
+
+        const koreanRegion =
+          geoItem.state ||
+          (englishToKoreanAlias[geoItem.name] ? englishToKoreanAlias[geoItem.name].region : (geoItem.country === 'KR' ? '대한민국' : geoItem.country))
+
+        return {
+          location: {
+            id: `search_${lat}_${lon}`,
+            country: geoItem.country === 'KR' ? '대한민국' : (geoItem.country || '해외'),
+            region: koreanRegion,
+            name: koreanName,
+            lat,
+            lon,
+          },
+          current: {
+            temp_c: Math.round(weatherData.main.temp),
+            feels_like_c: Math.round(weatherData.main.feels_like * 10) / 10,
+            condition: { text: weatherData.weather[0]?.description || '맑음' },
+            humidity: weatherData.main.humidity,
+            wind_kph: Math.round((weatherData.wind?.speed || 0) * 3.6),
+            serverDt: weatherData.dt,
+          },
         }
-      }
+      })
 
-      const url = `${BASE_URL}?q=${encodeURIComponent(searchTerm)}&appid=${API_KEY}&units=metric&lang=kr`
-      const res = await fetch(url)
-      if (!res.ok) return localMatches
-
-      const data = await res.json()
-      const searchItem = {
-        location: {
-          id: `search_${data.id}`,
-          country: data.sys?.country || '해외',
-          region: data.name,
-          name: data.name,
-          lat: data.coord?.lat,
-          lon: data.coord?.lon,
-        },
-        current: {
-          temp_c: Math.round(data.main.temp),
-          feels_like_c: Math.round(data.main.feels_like * 10) / 10,
-          condition: { text: data.weather[0]?.description || '맑음' },
-          humidity: data.main.humidity,
-          wind_kph: Math.round((data.wind?.speed || 0) * 3.6),
-          serverDt: data.dt,
-        },
-      }
+      const searchResults = (await Promise.all(searchRequests)).filter(Boolean)
 
       const combined = [...localMatches]
-      if (!combined.some((c) => c.location.name === searchItem.location.name)) {
-        combined.push(searchItem)
-      }
+      searchResults.forEach((item) => {
+        if (!combined.some((c) => c.location.name === item.location.name)) {
+          combined.push(item)
+        }
+      })
 
       return combined
     } catch (err) {
-      console.warn('도시 검색 OpenWeatherMap API 오류:', err)
+      console.warn('Geocoding 2단계 도시 검색 오류:', err)
       return localMatches
     }
   },

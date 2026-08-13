@@ -39,6 +39,8 @@ html.dark .nav-logo {
   padding: 0 20px;
   z-index: 1000;
   box-shadow: 0 10px 30px rgba(79, 70, 229, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 html.dark .nav-bar {
@@ -63,6 +65,8 @@ html.dark .nav-bar {
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .nav-btn:hover {
@@ -112,6 +116,8 @@ html.dark .nav-btn.active {
   justify-content: space-around;
   align-items: center;
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 html.dark .bottom-nav-bar {
@@ -133,6 +139,8 @@ html.dark .bottom-nav-bar {
   font-size: 0.74rem;
   font-weight: 700;
   transition: all 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .bottom-nav-icon {

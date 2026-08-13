@@ -89,11 +89,11 @@ watch(
 const handleInput = (e) => {
   const val = e.target.value
   localInput.value = val
-  emit('update:searchQuery', val)
 
   if (debounceTimer) clearTimeout(debounceTimer)
 
   if (!val || !val.trim()) {
+    emit('update:searchQuery', '')
     suggestions.value = []
     dropdownMode.value = 'recent'
     showDropdown.value = recentSearches.value.length > 0
@@ -102,12 +102,17 @@ const handleInput = (e) => {
 
   isFetchingSuggestions.value = true
   debounceTimer = setTimeout(async () => {
+    emit('update:searchQuery', val)
     try {
-      const results = await weatherService.fetchSuggestions(val)
-      suggestions.value = results
-      dropdownMode.value = 'suggestions'
-      showDropdown.value = results.length > 0
-      activeIndex.value = -1
+      if (typeof weatherService.fetchSuggestions === 'function') {
+        const results = await weatherService.fetchSuggestions(val)
+        suggestions.value = results
+        dropdownMode.value = 'suggestions'
+        showDropdown.value = results.length > 0
+        activeIndex.value = -1
+      }
+    } catch {
+      suggestions.value = []
     } finally {
       isFetchingSuggestions.value = false
     }

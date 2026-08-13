@@ -48,24 +48,15 @@ watch(
     <!-- ExerciseApp 전용 하위 서브 네비게이션 바 (전 화면 우측 드롭다운 전용) -->
     <div class="sub-nav-bar">
       <div class="sub-nav-select-wrapper">
-        <button
-          type="button"
-          class="sub-nav-dropdown-btn"
-          @click="isDropdownOpen = !isDropdownOpen"
-        >
+        <button type="button" class="sub-nav-dropdown-btn" @click="isDropdownOpen = !isDropdownOpen">
           <span>{{ currentOptionLabel }}</span>
           <span :class="['select-arrow', { open: isDropdownOpen }]">▾</span>
         </button>
 
         <Transition name="dropdown-fade">
           <div v-if="isDropdownOpen" class="sub-nav-dropdown-menu">
-            <button
-              v-for="opt in subTabOptions"
-              :key="opt.value"
-              type="button"
-              :class="['sub-nav-dropdown-item', { active: subTab === opt.value }]"
-              @click="selectSubTab(opt.value)"
-            >
+            <button v-for="opt in subTabOptions" :key="opt.value" type="button"
+              :class="['sub-nav-dropdown-item', { active: subTab === opt.value }]" @click="selectSubTab(opt.value)">
               {{ opt.label }}
             </button>
           </div>
@@ -98,7 +89,7 @@ watch(
 
       <!-- 과제 4/5 (라우터 적용) -->
       <div class="app-container grid-item">
-        <h1>⛅ 과제 5: 라우터 적용</h1>
+        <h1>⛅ 과제 4~</h1>
         <hr />
         <div class="dashboard-wrapper">
           <nav class="navigation-bar">
@@ -139,7 +130,7 @@ watch(
 
       <!-- 과제 4/5 단일 뷰 -->
       <div v-else-if="subTab === 'ex4'" class="app-container single-item">
-        <h1>⛅ 과제 5: 라우터 적용</h1>
+        <h1>⛅ 과제 4~</h1>
         <hr />
         <div class="dashboard-wrapper">
           <nav class="navigation-bar">
@@ -175,7 +166,8 @@ watch(
 .grid-item {
   margin: 0 !important;
   width: 100%;
-  min-width: 0; /* 내부 고정폭에 의한 컬럼 왜곡 방지 */
+  min-width: 0;
+  /* 내부 고정폭에 의한 컬럼 왜곡 방지 */
   box-sizing: border-box;
 }
 
