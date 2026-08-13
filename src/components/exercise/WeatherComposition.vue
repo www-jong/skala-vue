@@ -118,7 +118,6 @@ const filteredWeatherList = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()
   /** 쿼리가 비어있거나, 한글이면서 1단어인데 완성된 단어가 아닌 경우(ex. 광 검색해야되는데 ㄱ에서 벌써 안보이면 별로니까? */
   if (!query || /^[ㄱ-ㅎㅏ-ㅣ]$/.test(query.trim())) {
-    // 검색할 단어가 비어있는 경우
     return weatherList.value
   }
 
