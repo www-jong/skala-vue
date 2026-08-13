@@ -12,11 +12,26 @@ export const useWeatherStore = defineStore('mainWeather', () => {
   const selectedCityInfo = ref('원하시는 관측 도시 카드를 클릭하여 상태를 선택하세요.')
   const isLoading = ref(false)
 
+  // 🟢 3D 지구본 타겟 위경도 좌표 (초기값 null - 선택 전까지 핀 미표출)
+  const activeTargetCoords = ref(null)
+
   // 🟢 클라이언트 수신 시각 타임스탬프 (초 단위 Unix timestamp)
   const lastFetchTime = ref(0)
 
   // ⭐ 즐겨찾기 도시 목록 (localStorage 연동)
   const favorites = ref([])
+
+  // 타겟 좌표 설정 메소드 (3D 지구본 카메라 회전 연동)
+  function setTargetCoords(city) {
+    if (!city || !city.location) {
+      activeTargetCoords.value = null
+      return
+    }
+    const lat = city.location.lat
+    const lon = city.location.lon
+    const name = city.location.name || '관측지'
+    activeTargetCoords.value = { lat, lon, name }
+  }
 
   // 최근 즐겨찾기 로드
   function loadFavorites() {
@@ -36,7 +51,7 @@ export const useWeatherStore = defineStore('mainWeather', () => {
   function toggleFavorite(city) {
     if (!city || !city.location) return
     const id = city.location.id
-    const index = favorites.value.findIndex(item => item.location.id === id)
+    const index = favorites.value.findIndex((item) => item.location.id === id)
 
     if (index !== -1) {
       favorites.value.splice(index, 1)
@@ -53,7 +68,7 @@ export const useWeatherStore = defineStore('mainWeather', () => {
 
   // 즐겨찾기 여부 확인
   function isFavorite(cityId) {
-    return favorites.value.some(item => item.location.id === cityId)
+    return favorites.value.some((item) => item.location.id === cityId)
   }
 
   // 초기 로드 시 즐겨찾기 수신
@@ -64,7 +79,6 @@ export const useWeatherStore = defineStore('mainWeather', () => {
     const nowSec = Math.floor(Date.now() / 1000)
     const TEN_MIN_SEC = 10 * 60 // 600초 (10분)
 
-    // 💡 이미 수신된 데이터가 있고, 10분(600초) 이내 수신된 데이터면 API 호출 스킵
     if (
       defaultList.value.length > 0 &&
       lastFetchTime.value > 0 &&
@@ -92,12 +106,16 @@ export const useWeatherStore = defineStore('mainWeather', () => {
     searchQuery.value = query
     if (!query || !query.trim()) {
       searchResults.value = []
+      activeTargetCoords.value = null
       return
     }
     isLoading.value = true
     try {
       const results = await weatherService.searchCities(query)
       searchResults.value = results
+      if (results.length > 0) {
+        setTargetCoords(results[0])
+      }
     } finally {
       isLoading.value = false
     }
@@ -115,6 +133,7 @@ export const useWeatherStore = defineStore('mainWeather', () => {
   function selectCity(city) {
     selectedCityId.value = city.location.id
     selectedCityInfo.value = `${city.location.region} ${city.location.name}이(가) 선택되었습니다.`
+    setTargetCoords(city)
   }
 
   return {
@@ -126,10 +145,12 @@ export const useWeatherStore = defineStore('mainWeather', () => {
     isLoading,
     lastFetchTime,
     favorites,
+    activeTargetCoords,
     displayList,
     initWeather,
     search,
     selectCity,
+    setTargetCoords,
     toggleFavorite,
     isFavorite,
   }
