@@ -247,7 +247,7 @@ export const weatherService = {
   },
 
   /**
-   * Direct Geocoding API를 활용한 실시간 드롭다운 추천 목록 탐색
+   * Direct Geocoding API를 활용한 실시간 드롭다운 추천 목록 탐색 (로컬 관측지 우선 병합)
    */
   async fetchSuggestions(query) {
     if (!query || !query.trim()) return []
@@ -258,15 +258,31 @@ export const weatherService = {
       return []
     }
 
+    // 1. 내장 기본 10개 관측지 로컬 필터링
+    const localMatches = defaultCitiesData
+      .filter((item) => {
+        const fullText = `${item.location.country} ${item.location.region} ${item.location.name}`.toLowerCase()
+        return fullText.includes(trimmed.toLowerCase())
+      })
+      .map((item) => ({
+        id: `sug_${item.location.id}`,
+        country: item.location.country,
+        region: item.location.region,
+        name: item.location.name,
+        fullName: `[${item.location.country}] ${item.location.region} ${item.location.name}`,
+        lat: item.location.lat,
+        lon: item.location.lon,
+      }))
+
     try {
       const geoUrl = `${GEO_URL}?q=${encodeURIComponent(trimmed)}&limit=6&appid=${API_KEY}`
       const geoRes = await fetch(geoUrl)
-      if (!geoRes.ok) return []
+      if (!geoRes.ok) return localMatches.slice(0, 6)
 
       const geoList = await geoRes.json()
-      if (!geoList || geoList.length === 0) return []
+      if (!geoList || geoList.length === 0) return localMatches.slice(0, 6)
 
-      return geoList.map((item, index) => {
+      const geoSuggestions = geoList.map((item, index) => {
         const name = item.local_names?.ko || (englishToKoreanAlias[item.name] ? englishToKoreanAlias[item.name].name : item.name)
         const region = item.state || (englishToKoreanAlias[item.name] ? englishToKoreanAlias[item.name].region : (item.country === 'KR' ? '대한민국' : item.country))
         return {
@@ -279,8 +295,17 @@ export const weatherService = {
           lon: item.lon,
         }
       })
+
+      const combined = [...localMatches]
+      geoSuggestions.forEach((item) => {
+        if (!combined.some((c) => c.name === item.name)) {
+          combined.push(item)
+        }
+      })
+
+      return combined.slice(0, 6)
     } catch {
-      return []
+      return localMatches.slice(0, 6)
     }
   },
 
@@ -344,7 +369,7 @@ export const weatherService = {
             condition: { text: weatherData.weather[0]?.description || '맑음' },
             humidity: weatherData.main.humidity,
             wind_kph: Math.round((weatherData.wind?.speed || 0) * 3.6),
-            serverDt: weatherData.dt,
+            serverDt: dataDt(weatherData.dt),
           },
         }
       })
@@ -375,4 +400,8 @@ export const weatherService = {
     if (defaultFound) return defaultFound
     return null
   },
+}
+
+function dataDt(dt) {
+  return dt || Math.floor(Date.now() / 1000)
 }

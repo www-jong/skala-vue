@@ -72,9 +72,26 @@ const handleCloseModal = () => {
       @clear="handleClearSearch"
     />
 
+    <!-- ⭐ 즐겨찾기 관측 도시 영역 -->
+    <section v-if="weatherStore.favorites.length > 0 && !weatherStore.searchQuery" class="main-list-box favorites-box">
+      <h3>⭐ 즐겨찾기 관측 도시 ({{ weatherStore.favorites.length }})</h3>
+      <div class="favorites-grid">
+        <MainWeatherCard
+          v-for="item in weatherStore.favorites"
+          :key="'fav_' + item.location.id"
+          :city-item="item"
+          :is-selected="weatherStore.selectedCityId === item.location.id"
+          @select="handleSelectCity"
+          @show-detail="handleShowDetail"
+        />
+      </div>
+    </section>
+
     <!-- 날씨 카드 리스트 영역 -->
     <section class="main-list-box">
-      <h3>대한민국 및 글로벌 관측 지역 현황 (OpenWeatherMap API 실시간 연동)</h3>
+      <h3>
+        {{ weatherStore.searchQuery ? `🔍 "${weatherStore.searchQuery}" 검색 결과` : '대한민국 및 글로벌 관측 지역 현황 (OpenWeatherMap API 실시간 연동)' }}
+      </h3>
 
       <div v-if="weatherStore.isLoading" class="status-bar" style="margin-bottom: 16px;">
         ⚡ 실시간 기상 데이터를 수신하는 중입니다...

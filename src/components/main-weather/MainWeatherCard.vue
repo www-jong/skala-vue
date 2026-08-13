@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useConfigStore } from '@/stores/configStore'
+import { useWeatherStore } from '@/stores/weatherStore'
 
 const props = defineProps({
   cityItem: {
@@ -15,6 +16,16 @@ const props = defineProps({
 
 const emit = defineEmits(['select', 'showDetail'])
 const configStore = useConfigStore()
+const weatherStore = useWeatherStore()
+
+const isFav = computed(() => {
+  return weatherStore.isFavorite(props.cityItem.location.id)
+})
+
+const handleToggleFavorite = (e) => {
+  e.stopPropagation()
+  weatherStore.toggleFavorite(props.cityItem)
+}
 
 const displayTemp = computed(() => {
   const rawTemp = props.cityItem.current.temp_c
@@ -52,12 +63,22 @@ const formattedLocation = computed(() => {
       <h4 class="card-title">
         📍 {{ formattedLocation }}
       </h4>
-      <button
-        class="btn-detail"
-        @click.stop="emit('showDetail', cityItem)"
-      >
-        상세보기 →
-      </button>
+      <div class="card-action-group">
+        <button
+          class="btn-star-fav"
+          :class="{ active: isFav }"
+          @click.stop="handleToggleFavorite"
+          :title="isFav ? '즐겨찾기 해제' : '즐겨찾기 추가'"
+        >
+          {{ isFav ? '⭐' : '☆' }}
+        </button>
+        <button
+          class="btn-detail"
+          @click.stop="emit('showDetail', cityItem)"
+        >
+          상세보기 →
+        </button>
+      </div>
     </div>
 
     <div class="card-body">

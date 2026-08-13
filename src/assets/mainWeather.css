@@ -524,6 +524,64 @@ html.dark .unit-pill-badge {
 }
 
 /* ==========================================================================
+   즐겨찾기 버튼 & 영역 전용 스타일
+   ========================================================================== */
+.card-action-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-star-fav {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #94a3b8;
+  padding: 0;
+  line-height: 1;
+}
+
+.btn-star-fav:hover,
+.btn-star-fav.active {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: #f59e0b;
+  color: #f59e0b;
+  transform: scale(1.12);
+}
+
+html.dark .btn-star-fav {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(129, 140, 248, 0.3);
+  color: #64748b;
+}
+
+html.dark .btn-star-fav:hover,
+html.dark .btn-star-fav.active {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #fbbf24;
+  color: #fbbf24;
+}
+
+.favorites-box {
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  background: rgba(254, 243, 199, 0.3) !important;
+  margin-bottom: 24px;
+}
+
+html.dark .favorites-box {
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  background: rgba(30, 41, 59, 0.6) !important;
+}
+
+/* ==========================================================================
    4. 다크 모드 오버라이드 (mainWeather.css)
    ========================================================================== */
 html.dark .main-search-box,

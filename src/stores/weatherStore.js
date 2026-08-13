@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { weatherService } from '@/services/weatherService'
 
+const FAVORITES_KEY = 'skala_main_favorites'
+
 export const useWeatherStore = defineStore('mainWeather', () => {
   const defaultList = ref([])
   const searchResults = ref([])
@@ -12,6 +14,50 @@ export const useWeatherStore = defineStore('mainWeather', () => {
 
   // 🟢 클라이언트 수신 시각 타임스탬프 (초 단위 Unix timestamp)
   const lastFetchTime = ref(0)
+
+  // ⭐ 즐겨찾기 도시 목록 (localStorage 연동)
+  const favorites = ref([])
+
+  // 최근 즐겨찾기 로드
+  function loadFavorites() {
+    try {
+      const data = localStorage.getItem(FAVORITES_KEY)
+      if (data) {
+        favorites.value = JSON.parse(data)
+      } else {
+        favorites.value = []
+      }
+    } catch {
+      favorites.value = []
+    }
+  }
+
+  // 즐겨찾기 추가/제거 토글
+  function toggleFavorite(city) {
+    if (!city || !city.location) return
+    const id = city.location.id
+    const index = favorites.value.findIndex(item => item.location.id === id)
+
+    if (index !== -1) {
+      favorites.value.splice(index, 1)
+    } else {
+      favorites.value.push(city)
+    }
+
+    try {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites.value))
+    } catch {
+      // ignore
+    }
+  }
+
+  // 즐겨찾기 여부 확인
+  function isFavorite(cityId) {
+    return favorites.value.some(item => item.location.id === cityId)
+  }
+
+  // 초기 로드 시 즐겨찾기 수신
+  loadFavorites()
 
   // 기본 10개 관측 도시 날씨 로딩 (10분 TTL 캐싱)
   async function initWeather(force = false) {
@@ -79,9 +125,12 @@ export const useWeatherStore = defineStore('mainWeather', () => {
     selectedCityInfo,
     isLoading,
     lastFetchTime,
+    favorites,
     displayList,
     initWeather,
     search,
     selectCity,
+    toggleFavorite,
+    isFavorite,
   }
 })
