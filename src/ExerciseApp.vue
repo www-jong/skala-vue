@@ -16,7 +16,7 @@ const subTabOptions = [
   { value: 'ex1', label: '⛅ 과제 1. Mockup' },
   { value: 'ex2', label: '⛅ 과제 2. Composition' },
   { value: 'ex3', label: '⛅ 과제 3. Component' },
-  { value: 'ex4', label: '⛅ 과제 4/5. Router & Store' },
+  { value: 'ex4', label: '⛅ 과제 4~ (Router, Store & API)' },
 ]
 
 const currentOptionLabel = computed(() => {

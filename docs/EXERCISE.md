@@ -1,6 +1,6 @@
-# 📝 ExerciseApp (과제 1~5) 교재 기반 요구사항, 구현 & 고도화 상세 보고서
+# 📝 ExerciseApp (과제 1~9) 교재 기반 요구사항, 구현 & 고도화 상세 보고서
 
-`skala-vue` 프로젝트의 날씨 대시보드 애플리케이션 과제(Exercise 1~5)에 대하여 **교재/레퍼런스(`skala-vue-reference`) 원본 요구사항**, **실제 구현 코드**, 그리고 **추가 고도화(Customization & Optimization)** 내역을 상세하게 정리한 종합 보고서입니다.
+`skala-vue` 프로젝트의 날씨 대시보드 애플리케이션 과제(Exercise 1~9: 과제 1~3 스냅샷 및 과제 4~ 통합 대시보드)에 대하여 **교재/레퍼런스(`skala-vue-reference`) 원본 요구사항**, **실제 구현 코드**, 그리고 **추가 고도화(Customization & Optimization)** 내역을 상세하게 정리한 종합 보고서입니다.
 
 ---
 
@@ -10,7 +10,7 @@
 2. [Exercise 2. Composition API 날씨 대시보드](#-exercise-2-composition-api-날씨-대시보드)
 3. [Exercise 3. 재사용 가능한 컴포넌트 구조 분리](#-exercise-3-재사용-가능한-컴포넌트-구조-분리)
 4. [Exercise 4. Vue Router 기반 페이지 라우팅](#-exercise-4-vue-router-기반-페이지-라우팅)
-5. [Exercise 5. OpenWeatherMap API &amp; Pinia 전역 스토어 연동](#-exercise-5-openweathermap-api--pinia-전역-스토어-연동)
+5. [Exercise 4~. Vue Router, Pinia 스토어 &amp; OpenWeatherMap API 연동 대시보드](#-exercise-5-openweathermap-api--pinia-전역-스토어-연동)
 6. [🔥 킬러 커스터마이징 &amp; 고급 아키텍처 요약](#-킬러-커스터마이징--고급-아키텍처-요약)
 
 ---

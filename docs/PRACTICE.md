@@ -1,125 +1,132 @@
-# 📚 PracticeApp (실습 23종) 구현 & 커스터마이징 상세 보고서
+# 📚 PracticeApp (실습 4종 46개 컴포넌트) 종합 보고서
 
-`skala-vue` 프로젝트의 교재 실습 컴포넌트(Chapter 1 & 2 총 23개)의 요구사항, 구현 내역 및 공통 고도화(Customization) 내역을 디테일하게 정리한 보고서입니다.
+`skala-vue` 프로젝트의 교재 실습 컴포넌트(**Basic**, **Component**, **Composition**, **Library** 총 4개 영역 46개 컴포넌트)의 요구사항, 구현 내역 및 기술 명세를 디테일하게 정리한 보고서입니다.
 
 ---
 
 ## 📌 목차 (Table of Contents)
-1. [전역 실습 프레임워크 고도화](#-전역-실습-프레임워크-고도화)
-2. [Chapter 1. Vue 기초 & 템플릿 바인딩 (16개 컴포넌트)](#-chapter-1-vue-기초--템플릿-바인딩-16개-컴포넌트)
-3. [Chapter 2. 이벤트 핸들링, 폼 바인딩 & 스타일링 (7개 컴포넌트)](#-chapter-2-이벤트-핸들링-폼-바인딩--스타일링-7개-컴포넌트)
+
+1. [📖 1. Basic Directives & Events (기초 23개 컴포넌트)](#-1-basic-directives--events-기초-23개-컴포넌트)
+2. [🧩 2. Component & Lifecycle (컴포넌트 & 생명주기 10개 컴포넌트)](#-2-component--lifecycle-컴포넌트--생명주기-10개-컴포넌트)
+3. [⚙️ 3. Composition API (반응형 상태 & 감시자 8개 컴포넌트)](#-3-composition-api-반응형-상태--감시자-8개-컴포넌트)
+4. [📚 4. Library & Async (외부 라이브러리 & 비동기 5개 컴포넌트)](#-4-library--async-외부-라이브러리--비동기-5개-컴포넌트)
+5. [🛠️ 전역 실습 프레임워크 & UX 커스터마이징](#-전역-실습-프레임워크--ux-커스터마이징)
 
 ---
 
-## 🛠 전역 실습 프레임워크 고도화
+## 📖 1. Basic Directives & Events (기초 23개 컴포넌트)
 
-### 1. 동적 컴포넌트 자동 로딩 (`import.meta.glob`)
-- **기존 문제**: 수십 개의 실습 컴포넌트를 수동으로 `import`하고 등록하면 `PracticeApp.vue` 파일이 비대해지고 수동 누락 위험 발생.
-- **고도화 구현**: Vite의 `import.meta.glob('./components/practices/**/*.vue', { eager: true })` 문법을 도입하여 파일 시스템 기반 동적 자동 수집 및 챕터별 자동 그룹핑 렌더링 구축.
-
-### 2. 모바일 서브바 커스텀 드롭다운 팝오버 (`PracticeApp.vue`)
-- **고도화 구현**: 화면 폭 768px 이하 모바일 디바이스 접속 시, 상단 서브탭 버튼들이 좁아지는 현상을 방지하기 위해 우측 글래스모피즘 커스텀 드롭다운 팝오버 메뉴로 자동 전환.
-
-### 3. 통일된 모던 카드 UI & 튜토리얼 템플릿
-- **공통 템플릿**: 모든 실습 컴포넌트 상단에 **개념 설명문 주석 카드**와 **구분선(`hr`)**을 공통 배치하여 단독으로 컴포넌트를 실행해도 학습 목표와 개념을 바로 이해할 수 있도록 디자인.
-- **모던 디자인**: 조잡한 무분별한 이모티콘을 정돈하고, CSS Glassmorphism 및 라이트/다크모드 완벽 지원.
-
----
-
-## 📖 Chapter 1. Vue 기초 & 템플릿 바인딩 (16개 컴포넌트)
-
-### 1. SampleOne.vue (카운터 기초)
-- **요구사항 & 구현**: `ref` 반응형 상태 생성 및 일반 자바스크립트 변수(`let`)의 화면 갱신 차이 비교.
-- **커스터마이징**: 반응형 상태 변수와 일반 변수를 동시 출력하여 클릭 시 반응성(Reactivity) 유무를 즉시 시각적으로 비교할 수 있도록 개선.
-
-### 2. SampleTwo.vue (보간법 기초)
-- **요구사항 & 구현**: `{{ }}` Mustache 보간법 속에서 자바스크립트 표현식 동적 실행.
-- **커스터마이징**: `toUpperCase()`, `Math.random()`, 삼항 연산자 등을 보간법 내부에서 구동하여 결과 실시간 표시.
-
-### 3. VText.vue (v-text 디렉티브)
-- **요구사항 & 구현**: `v-text` 속성 바인딩 방식과 `{{ }}` 보간법 비교.
-- **커스터마이징**: 텍스트 바인딩 시 기존 자식 노드가 덮어씌워지는 현상 가이드 추가.
-
-### 4. VHtml.vue (v-html 디렉티브)
-- **요구사항 & 구현**: `v-html`을 활용한 원시 HTML 태그 동적 파싱 렌더링.
-- **커스터마이징**: HTML 스트링(`<strong>`, `<em>` 등)을 안전하게 파싱하는 렌더링 카드 구성.
-
-### 5. VHtmlXSS.vue (v-html 보안 이슈)
-- **요구사항 & 구현**: `v-html` 사용 시 발생할 수 있는 XSS (Cross-Site Scripting) 공격 위험성 검증.
-- **커스터마이징**: `<img src="x" onerror="alert(...)">` 주입 예시와 함께 보안 경고 알림창 및 대안 가이드 추가.
-
-### 6. VBindBasic.vue (v-bind 기초)
-- **요구사항 & 구현**: `v-bind` 동적 링크, 이미지 `src`, 버튼 `disabled` 상태 토글.
-- **커스터마이징**: 버튼 클릭 시 동적으로 링크 URL과 버튼 활성 상태가 토글되는 인터랙티브 예시 구성.
-
-### 7. VBindClassBinding.vue (클래스 바인딩)
-- **요구사항 & 구현**: 객체 구문(`{ active: isActive }`) 및 배열 구문 기반 동적 CSS 클래스 적용.
-- **커스터마이징**: `@click` 토글 시 360도 회전 및 펄스 효과 애니메이션(`moving-text`) 클래스 바인딩 적용.
-
-### 8. VBindStyleBinding.vue (스타일 바인딩)
-- **요구사항 & 구현**: 동적 인라인 스타일 (`color`, `fontSize`, `width`) 조절.
-- **커스터마이징**: Range 슬라이더와 연동하여 박스 가로 크기(`boxWidth`)와 모서리 둥글기(`borderRadius`)를 실시간으로 조작하는 UI 구현.
-
-### 9. VBindShortHand.vue (v-bind 축약 문법)
-- **요구사항 & 구현**: `v-bind` 축약 콜론(`:`) 및 Vue 3.4+ Same-name shorthand (`:id`, `:src`) 적용.
-- **커스터마이징**: 슬라이더를 움직이면 동일 변수명 바인딩 기반 이미지 크기가 실시간 조절되는 예시 구현.
-
-### 10. VCondition.vue (조건부 렌더링)
-- **요구사항 & 구현**: `v-if` / `v-else-if` / `v-else` 로그인 토글 및 슬라이더 성적 학점 조건문.
-- **커스터마이징**: 점수 슬라이더(0~100점) 조작 시 학점(A/B/C/D/F) 뱃지가 실시간 변경되는 조건부 UI 구현.
-
-### 11. VShow.vue (v-show 디렉티브)
-- **요구사항 & 구현**: `v-show` CSS `display: none` 기반 가시성 토글.
-- **커스터마이징**: `v-if`와 `v-show`를 인스펙터로 비교 분석할 수 있도록 개발자 도구 DOM 구조 안내문 추가.
-
-### 12. VFor.vue (v-for 디렉티브)
-- **요구사항 & 구현**: 배열 및 객체 순회 렌더링 (`:key` 필수 바인딩).
-- **커스터마이징**: `input` 입력을 통한 배열 요소 동적 추가(`push`) 및 삭제(`splice`) 기능 연동.
-
-### 13. VPre.vue (v-pre 디렉티브)
-- **요구사항 & 구현**: `v-pre`를 통한 Vue 컴파일 스킵.
-- **커스터마이징**: 컴파일된 결과와 `v-pre`로 컴파일 스킵된 템플릿 원문(`{{ raw }}`) 비교 카드 렌더링.
-
-### 14. VCloak.vue (v-cloak 디렉티브)
-- **요구사항 & 구현**: `[v-cloak] { display: none; }` CSS와 연동하여 초기 템플릿 깜빡임(FOUC) 방지.
-- **커스터마이징**: 마운트 전 raw 템플릿 숨김 처리 적용 가이드 카드 구성.
-
-### 15. VOnce.vue (v-once 디렉티브)
-- **요구사항 & 구현**: `v-once`를 활용하여 최초 1회만 렌더링 후 반응형 업데이트 차단.
-- **커스터마이징**: 버튼 클릭 시 일반 `ref` 카운터는 올라가지만 `v-once` 카운터는 고정되는 대조 예시 구축.
-
-### 16. VMemo.vue (v-memo 디렉티브)
-- **요구사항 & 구현**: `v-memo` 의존성 배열에 따른 조건부 컴포넌트 재렌더링 성능 최적화.
-- **커스터마이징**: 의존성 변수 변경 시에만 리렌더링되는 성능 비교 예시 카드 구축.
+| 컴포넌트 파일 | 핵심 구현 내용 및 설명 |
+|---|---|
+| **SampleOne.vue** | `ref` 반응형 상태 생성 및 일반 변수(`let`)의 화면 갱신 차이 비교 |
+| **SampleTwo.vue** | `{{ }}` Mustache 보간법 속에서 자바스크립트 표현식 동적 실행 |
+| **VText.vue** | `v-text` 속성 바인딩 방식과 `{{ }}` 보간법 비교 및 자식 노드 덮어쓰기 현상 검증 |
+| **VHtml.vue** | `v-html`을 활용한 원시 HTML 태그 스트링 동적 파싱 렌더링 |
+| **VHtmlXSS.vue** | `v-html` 사용 시 발생할 수 있는 XSS (Cross-Site Scripting) 공격 위험성 예시 |
+| **VBindBasic.vue** | `v-bind` 동적 링크, 이미지 `src`, 버튼 `disabled` 상태 동적 토글 |
+| **VBindClassBinding.vue** | 객체 구문(`{ active: isActive }`) 및 배열 구문 기반 동적 CSS 클래스 적용 |
+| **VBindStyleBinding.vue** | Range 슬라이더와 연동하여 동적 인라인 스타일(`color`, `width`, `borderRadius`) 조절 |
+| **VBindShortHand.vue** | `v-bind` 축약 콜론(`:`) 및 Vue 3.4+ Same-name shorthand (`:id`, `:src`) 적용 |
+| **VCondition.vue** | `v-if` / `v-else-if` / `v-else` 점수 슬라이더(0~100점) 학점(A~F) 조건부 UI |
+| **VShow.vue** | `v-show` CSS `display: none` 기반 가시성 토글 및 `v-if` DOM 생성 차이 비교 |
+| **VFor.vue** | `v-for` 배열/객체 순회 렌더링 (`:key` 필수 바인딩) 및 동적 추가(`push`), 삭제(`splice`) |
+| **VPre.vue** | `v-pre`를 통한 Vue 컴파일 스킵 및 템플릿 원문(`{{ raw }}`) 노출 |
+| **VCloak.vue** | `[v-cloak] { display: none; }` CSS와 연동하여 초기 템플릿 깜빡임(FOUC) 방지 |
+| **VOnce.vue** | `v-once`를 활용하여 최초 1회만 렌더링 후 반응형 업데이트 차단 |
+| **VMemo.vue** | `v-memo` 의존성 배열에 따른 조건부 컴포넌트 재렌더링 성능 최적화 |
+| **VOnEvent.vue** | `v-on` / `@click` 인라인 증감 연산 및 스크립트 메서드 호출 |
+| **EventObject.vue** | `` 클릭 좌표(`clientX/Y`) 및 `@mousemove` 실시간 마우스 X, Y 좌표 추적 |
+| **EventModifier.vue** | `@click.prevent` (기본 동작 차단) 및 `@click.stop` (버블링 차단) 비교 |
+| **VModel.vue** | `v-model` 양방향 바인딩 및 원리(`:value` + `@input`) 수동 구현 및 IME 조합 지연 검증 |
+| **VModelForm.vue** | `textarea`, 단일/다중 `checkbox`, `radio`, `select` 폼 요소 양방향 매핑 및 JSON 프리뷰 |
+| **VModelModifier.vue** | `v-model` 수식어 `.lazy`, `.number`, `.trim` 및 체이닝과 `typeof` 타입 비교 |
+| **VStyle.vue** | Component Scoped CSS의 캡슐화 특성 및 외부 CSS 오버라이딩 비교 |
 
 ---
 
-## ⚙️ Chapter 2. 이벤트 핸들링, 폼 바인딩 & 스타일링 (7개 컴포넌트)
+## 🧩 2. Component & Lifecycle (컴포넌트 & 생명주기 10개 컴포넌트)
 
-### 17. VOnEvent.vue (v-on 클릭 이벤트)
-- **요구사항 & 구현**: `@click` 인라인 증감 연산 및 스크립트 메서드 호출.
-- **커스터마이징**: 이벤트 전달 파라미터 및 축약어(`@`) 활용 카운터 구현.
+부모-자식 데이터 통신, 프레임워크 템플릿 주입(`slot`), 생명주기 훅(`Lifecycle`)을 탐구하는 영역입니다.
 
-### 18. EventObject.vue ($event 이벤트 객체)
-- **요구사항 & 구현**: `$event` 클릭 좌표(`clientX/Y`) 및 태그명(`target.tagName`) 추출.
-- **커스터마이징**: `@mousemove` 이벤트를 연동하여 박스 내부 마우스 실시간 X, Y 좌표 추적 레이아웃 구현.
+### 1. LifecycleParent.vue / LifecycleChild.vue
+- **핵심 목표**: Vue 3 컴포넌트의 생성, 마운트, 업데이트, 언마운트 생명주기 훅을 검증.
+- **주요 훅**: `onBeforeMount`, `onMounted`, `onBeforeUpdate`, `onUpdated`, `onBeforeUnmount`, `onUnmounted`.
+- **기술 명세**: 토글 버튼으로 자식 컴포넌트 생성/파괴 시 콘솔 및 타임라인 상태 추적.
 
-### 19. EventModifier.vue (이벤트 수식어)
-- **요구사항 & 구현**: `@click.prevent` (기본 동작 차단) 및 `@click.stop` (버블링 차단) 비교 제어.
-- **커스터마이징**: 링크 이동 차단 및 부모-자식 태그 이벤트 전파 차단 시각적 폼 구현.
+### 2. PropsEmitsParent.vue / PropsEmitsChild.vue
+- **핵심 목표**: 부모 -> 자식 단방향 데이터 전달(`props`) 및 자식 -> 부모 Custom Event 발신(`emits`).
+- **기술 명세**: `defineProps({ title: String, count: Number })`, `defineEmits(['increaseCount', 'resetCount'])` 구사.
 
-### 20. VModel.vue (v-model 양방향 바인딩)
-- **요구사항 & 구현**: `v-model` 양방향 바인딩 및 원리(`:value` + `@input`) 수동 구현 비교.
-- **커스터마이징**: 한글 IME 조합 중 글자 완성 전 지연 현상과 해결법 안내 카드 포함.
+### 3. SlotDefaultParent.vue / SlotDefaultChild.vue
+- **핵심 목표**: 컴포넌트 기본 슬롯(`<slot />`)을 활용한 템플릿 콘텐츠 주입.
+- **기술 명세**: 자식 컴포넌트 껍데기 레이아웃 내부에 부모의 텍스트 및 버튼 요소를 주입 렌더링.
 
-### 21. VModelForm.vue (HTML Form 바인딩)
-- **요구사항 & 구현**: `textarea`, 단일/다중 `checkbox`, `radio`, `select` 드롭다운 전체 폼 요소 양방향 매핑.
-- **커스터마이징**: 전체 폼 입력을 종합하여 하단에 JSON 프리뷰 객체로 실시간 표출하는 대시보드 형태 구성.
+### 4. SlotNamedParent.vue / SlotNamedChild.vue
+- **핵심 목표**: 이름 있는 슬롯(`<slot name="header">`, `<slot name="footer">`) 다중 영역 분할 주입.
+- **기술 명세**: 부모에서 `<template #header>`, `<template #default>`, `<template #footer>` v-slot 구문 사용.
 
-### 22. VModelModifier.vue (v-model 수식어)
-- **요구사항 & 구현**: `v-model` 수식어 `.lazy`, `.number`, `.trim` 및 체이닝(`.trim.number`).
-- **커스터마이징**: 각각의 수식어 적용 결과 및 `typeof` 타입 체크 결과를 실시간 비교 표출.
+### 5. SlotScopedParent.vue / SlotScopedChild.vue
+- **핵심 목표**: 범위 지정 슬롯(Scoped Slot)을 통해 자식 컴포넌트 내부 데이터를 부모 템플릿으로 역전 전달.
+- **기술 명세**: 자식에서 `<slot :item="item" :index="index">` 바인딩, 부모에서 `<template #default="{ item, index }">`로 데이터 바인딩.
 
-### 23. VStyle.vue (Scoped 스타일 및 외부 CSS)
-- **요구사항 & 구현**: Scoped 스타일 및 외부 CSS 모듈 연동.
-- **커스터마이징**: Component Scoped CSS의 캡슐화 특성 및 외부 덮어쓰기 오버라이딩 비교 예시 구축.
+---
+
+## ⚙️ 3. Composition API (반응형 상태 & 감시자 8개 컴포넌트)
+
+Vue 3 Composition API 핵심 반응형 프리미티브(`ref`, `reactive`, `computed`, `watch`, `watchEffect`)를 학습합니다.
+
+### 1. ReactiveRef.vue
+- **기술 명세**: `ref()` 단일 반응형 원시값(Primitive Value) 생성, `.value` 접근 및 템플릿 자동 언랩핑(Unwrapping) 검증.
+
+### 2. ReactiveReactive.vue
+- **기술 명세**: `reactive()` 객체/배열 깊은 반응형(Deep Reactivity) 상태 관리 및 객체 덮어쓰기 시 반응성 유실 주의사항 실습.
+
+### 3. ComputedBasic.vue
+- **기술 명세**: `computed()` 계산된 반응형 게터 속성. 종속성이 변경될 때만 재계산되는 캐싱(Caching) 특성을 메서드 호출과 비교.
+
+### 4. WatcherBasic.vue
+- **기술 명세**: `watch(source, callback)` 단일 `ref` 감시. 이전 값(`oldVal`)과 새로운 값(`newVal`) 추적.
+
+### 5. WatcherMulti.vue
+- **기술 명세**: `watch([refA, refB], ([newA, newB], [oldA, oldB]) => ...)` 다중 반응형 상태 배열 일괄 감시.
+
+### 6. WatcherReactive.vue
+- **기술 명세**: `reactive` 객체의 특정 프로퍼티 감시 시 화살표 함수 `watch(() => state.count, ...)` 래핑 구문 적용.
+
+### 7. WatcherDeep.vue
+- **기술 명세**: 중첩 객체 내부 변경 인지를 위한 `watch(target, callback, { deep: true, immediate: true })` 옵션 구사.
+
+### 8. WatcherEffect.vue
+- **기술 명세**: `watchEffect()`를 사용한 자동 의존성 수집 및 컴포넌트 생성 즉시 바인딩 실행.
+
+---
+
+## 📚 4. Library & Async (외부 라이브러리 & 비동기 5개 컴포넌트)
+
+외부 비동기 통신(Axios), 상태 관리(Pinia), ES6+ 현대 문법, UI 라이브러리(Element Plus)를 다룹니다.
+
+### 1. AxiosJson.vue
+- **기술 명세**: `axios.get`, `post`, `put`, `delete` 메소드를 사용해 JSONPlaceholder Mock REST API CRUD 비동기 통신 구현.
+
+### 2. AxiosWeather.vue
+- **기술 명세**: OpenWeatherMap API(`https://api.openweathermap.org/data/2.5/weather`) 연동, `Promise.all` 및 `try-catch-finally` 로딩 처리.
+
+### 3. EcmaScript.vue
+- **기술 명세**: ES6+ 필수 현대 자바스크립트 문법(구조 분해 할당, Spread 연산자, 화살표 함수, Promise, `async/await`) 동적 실습.
+
+### 4. ElementPlus.vue
+- **기술 명세**: Element Plus Component Library 연동 (`el-button`, `el-table`, `el-dialog`, `el-tag` 모던 UI 대시보드).
+
+### 5. StoreCounter.vue
+- **기술 명세**: Pinia Setup Store (`defineStore('counter', ...)`) 기반 전역 카운터 상태 및 액션 연동.
+
+---
+
+## 🛠️ 전역 실습 프레임워크 & UX 커스터마이징
+
+1. **동적 컴포넌트 자동 로딩 (`import.meta.glob`)**:
+   - `PracticeApp.vue`에서 Vite의 `import.meta.glob('./components/practices/**/*.vue')`를 도입해 파일 시스템 기반 4개 영역 자동 바인딩.
+2. **우측 하단 팝오버 드롭다운 서브바**:
+   - 모바일(<= 768px) 접속 시 상단 서브탭 버튼들이 비좁아지는 문제를 해결하기 위해 우측 글래스모피즘 커스텀 팝오버 드롭다운으로 자동 변환.
+3. **통일된 모던 카드 UI**:
+   - 모든 실습 컴포넌트 상단에 **개념 설명 카드** 및 **구분선(`hr`)**을 공통 배치하여 단독 실행 시에도 개념을 즉시 이해하도록 구축.
