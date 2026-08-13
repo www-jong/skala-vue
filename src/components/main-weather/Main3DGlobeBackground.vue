@@ -163,7 +163,14 @@ const initCesium = async () => {
   window.addEventListener('mousemove', resetIdleTimer)
   window.addEventListener('mousedown', resetIdleTimer)
   window.addEventListener('wheel', resetIdleTimer)
-  window.addEventListener('touchstart', resetIdleTimer)
+  window.addEventListener('touchstart', resetIdleTimer, { passive: true })
+  window.addEventListener('touchmove', resetIdleTimer, { passive: true })
+  window.addEventListener('touchend', resetIdleTimer, { passive: true })
+
+  // Cesium 터치 이벤트 명시 활성화 (모바일 핀치줌·드래그 회전)
+  if (viewer.scene.screenSpaceCameraController) {
+    viewer.scene.screenSpaceCameraController.enableInputs = true
+  }
 
   renderFavorites()
 
@@ -274,6 +281,8 @@ onUnmounted(() => {
   window.removeEventListener('mousedown', resetIdleTimer)
   window.removeEventListener('wheel', resetIdleTimer)
   window.removeEventListener('touchstart', resetIdleTimer)
+  window.removeEventListener('touchmove', resetIdleTimer)
+  window.removeEventListener('touchend', resetIdleTimer)
 
   if (viewer && !viewer.isDestroyed()) {
     if (preUpdateListener) {
@@ -308,6 +317,8 @@ onUnmounted(() => {
   pointer-events: auto !important;
   z-index: 100 !important;
   opacity: 1 !important;
+  touch-action: manipulation !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 .cesium-container {
