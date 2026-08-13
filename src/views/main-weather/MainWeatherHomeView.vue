@@ -67,24 +67,14 @@ const handleCloseModal = () => {
     <!-- CesiumJS 실사 위성 3D 지구본 배경 -->
     <Main3DGlobeBackground :is-interactive="isGlobeOnlyMode" />
 
-    <!-- 🌍 지구본 전용 탐색 모드 상단 복원 플로팅 바 -->
-    <div v-if="isGlobeOnlyMode" class="globe-mode-floating-bar">
-      <div class="globe-mode-info">
-        <span>🌍 Cesium 3D 실사 지구본 탐색 모드 (마우스 드래그/휠로 회전/확대 가능)</span>
-        <button class="btn-restore-dashboard" @click="isGlobeOnlyMode = false">
-          👁️ 대시보드 복원하기
-        </button>
-      </div>
-    </div>
-
-    <!-- 🟢 하단 중앙 고정 불투명 3D 지구본 전면 탐색 버튼 -->
+    <!-- 🟢 하단 중앙 고정 단일 토글 전면 탐색 / 대시보드 복원 버튼 -->
     <button
       class="btn-toggle-globe-mode bottom-center-btn"
-      :class="{ 'hidden-for-globe': isGlobeOnlyMode }"
+      :class="{ 'in-globe-mode': isGlobeOnlyMode }"
       @click="isGlobeOnlyMode = !isGlobeOnlyMode"
-      title="3D 지구본 전면 직접 조작 모드"
+      title="3D 지구본 전면 직접 조작 토글"
     >
-      🌍 3D 지구본 전면 탐색 (창 숨기기)
+      {{ isGlobeOnlyMode ? '👁️ 대시보드 창 복원하기' : '🌍 3D 지구본 전면 탐색 (창 숨기기)' }}
     </button>
 
     <!-- 🟢 메인 듀얼 사이드바 그리드 레이아웃 (중앙 3D 지구본 히어로 조망) -->
@@ -93,7 +83,6 @@ const handleCloseModal = () => {
       <aside class="sidebar-panel left-sidebar">
         <div class="sidebar-header">
           <h3>🔍 관측 도시 검색 현황</h3>
-          <!-- 💡 섭씨/화씨 온도 토글 버튼을 관측도시검색현황 제목 우측에 배치 -->
           <MainUnitToggler />
         </div>
 

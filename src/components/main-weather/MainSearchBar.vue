@@ -142,20 +142,7 @@ const handleBlur = () => {
 </script>
 
 <template>
-  <section class="main-search-box">
-    <div class="main-search-header">
-      <h3>🔍 글로벌 실시간 도시 검색</h3>
-      <span :class="['main-search-badge', { active: searchQuery }]">
-        {{
-          isLoading
-            ? '⚡ 실시간 API 관측 중...'
-            : searchQuery
-              ? `"${searchQuery}" 관측 결과`
-              : '기본 관측 지역 보기'
-        }}
-      </span>
-    </div>
-
+  <div class="main-search-box-compact">
     <div class="main-search-input-container">
       <span class="main-search-icon">🔍</span>
       <input
@@ -166,7 +153,7 @@ const handleBlur = () => {
         @keydown="handleKeyDown"
         @focus="handleFocus"
         @blur="handleBlur"
-        placeholder="도시 또는 지명 검색 (예: 서울, 파주, 도쿄, Paris)..."
+        placeholder="도시 또는 지명 검색 (예: 서울, 파주, 도쿄)..."
         autocomplete="off"
       />
       <button
@@ -179,7 +166,7 @@ const handleBlur = () => {
         ✕
       </button>
 
-      <!-- 포커스 시 0ms 즉시 노출되는 최근 검색 기록 팝업 -->
+      <!-- 포커스 시 즉시 노출되는 최근 검색 기록 팝업 -->
       <div v-if="showRecentDropdown && recentSearches.length > 0" class="main-autocomplete-dropdown">
         <div class="recent-search-header">
           <span class="recent-title">🕒 최근 검색 기록</span>
@@ -204,5 +191,5 @@ const handleBlur = () => {
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>

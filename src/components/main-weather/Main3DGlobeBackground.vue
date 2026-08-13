@@ -29,30 +29,69 @@ const resetIdleTimer = () => {
   lastInteractionTime = Date.now()
 }
 
-// Cesium 내부 라벨 노이즈(자글거림)를 100% 해결하는 고화질 2D Canvas Billboard 생성기
-function createLabelCanvas(text, isStar = false) {
+// ────────────────────────────────────────────
+// 온도 숫자를 아이콘처럼 렌더링하는 Canvas
+// temp: number(°C), name: string
+// ────────────────────────────────────────────
+function createTempLabelCanvas(temp, name, isStar = false) {
+  const tempStr = temp !== null && temp !== undefined ? `${Math.round(temp)}°` : '?°'
+  // 이름을 공백 기준으로 분리하여 두 줄 표시 (울산광역시 남구 → 1줄: 울산광역시, 2줄: 남구)
+  const parts = (name || '').trim().split(' ')
+  const line1 = parts.length > 1 ? parts.slice(0, -1).join(' ') : parts[0]
+  const line2 = parts.length > 1 ? parts[parts.length - 1] : ''
+
   const canvas = document.createElement('canvas')
-  canvas.width = 280
-  canvas.height = 70
+  canvas.width = 240
+  canvas.height = line2 ? 100 : 80
   const ctx = canvas.getContext('2d')
 
-  // 1. 선명한 다크 슬레이트 캡슐형 배경
-  ctx.fillStyle = 'rgba(15, 23, 42, 0.92)'
-  ctx.beginPath()
-  ctx.roundRect(8, 8, 264, 54, 16)
-  ctx.fill()
+  const tempColor = temp >= 30 ? '#ef4444' : temp >= 25 ? '#f97316' : temp >= 18 ? '#22c55e' : temp >= 10 ? '#38bdf8' : '#818cf8'
+  const shadowColor = 'rgba(2, 6, 23, 0.95)'
 
-  // 은은한 테두리 하이라이트 선
-  ctx.strokeStyle = isStar ? '#f59e0b' : '#6366f1'
-  ctx.lineWidth = 3
-  ctx.stroke()
-
-  // 2. Razor-sharp 선명한 텍스트 렌더링
-  ctx.font = 'bold 24px sans-serif'
-  ctx.fillStyle = isStar ? '#fbbf24' : '#ffffff'
+  // ── 온도 숫자 (크게)
+  ctx.font = 'bold 36px "Segoe UI", sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText(text, 140, 35)
+
+  for (let i = 0; i < 6; i++) {
+    ctx.shadowColor = shadowColor
+    ctx.shadowBlur = 8 + i * 2
+    ctx.fillStyle = shadowColor
+    ctx.fillText(tempStr, 120, 28)
+  }
+  ctx.shadowColor = 'transparent'
+  ctx.shadowBlur = 0
+  ctx.fillStyle = isStar ? '#fbbf24' : tempColor
+  ctx.fillText(tempStr, 120, 28)
+
+  // ── 도시명 1줄 (region or full name)
+  ctx.font = 'bold 15px "Segoe UI", sans-serif'
+  const y1 = line2 ? 64 : 62
+  for (let i = 0; i < 4; i++) {
+    ctx.shadowColor = shadowColor
+    ctx.shadowBlur = 6 + i
+    ctx.fillStyle = shadowColor
+    ctx.fillText(line1, 120, y1)
+  }
+  ctx.shadowColor = 'transparent'
+  ctx.shadowBlur = 0
+  ctx.fillStyle = '#e2e8f0'
+  ctx.fillText(line1, 120, y1)
+
+  // ── 도시명 2줄 (name) — region이 있을 때만
+  if (line2) {
+    const y2 = 84
+    for (let i = 0; i < 4; i++) {
+      ctx.shadowColor = shadowColor
+      ctx.shadowBlur = 6 + i
+      ctx.fillStyle = shadowColor
+      ctx.fillText(line2, 120, y2)
+    }
+    ctx.shadowColor = 'transparent'
+    ctx.shadowBlur = 0
+    ctx.fillStyle = '#ffffff'
+    ctx.fillText(line2, 120, y2)
+  }
 
   return canvas
 }
@@ -64,7 +103,6 @@ const initCesium = async () => {
   const Cesium = window.Cesium
   Cesium.Ion.defaultAccessToken = ''
 
-  // 1. 기본 뷰어 인스턴스 생성
   viewer = new Cesium.Viewer(globeContainerRef.value, {
     imageryProvider: false,
     baseLayerPicker: false,
@@ -80,12 +118,11 @@ const initCesium = async () => {
     scene3DOnly: true,
   })
 
-  // Cesium 로고 제거
   if (viewer.cesiumWidget && viewer.cesiumWidget.creditContainer) {
     viewer.cesiumWidget.creditContainer.style.display = 'none'
   }
 
-  // 2. ArcGIS HD 실사 위성 지도 타일 비동기 추가 (3D 구체 표면에 100% 매핑)
+  // ArcGIS HD 실사 위성 지도
   try {
     const arcgisProvider = await Cesium.ArcGisMapServerImageryProvider.fromUrl(
       'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer'
@@ -102,46 +139,42 @@ const initCesium = async () => {
     }
   }
 
-  // 3. 지구 대기 분위기 & 명암 보정 (enableLighting = false로 전 세계 대륙 선명 노출)
   viewer.scene.globe.enableLighting = false
   viewer.scene.globe.showGroundAtmosphere = true
   viewer.scene.skyAtmosphere.show = true
 
-  // 4. 유휴 상태(3초 동안 조작이 없으면) 3D 지구 자동 자전 회전 렌더링
+  // 줌 범위 제한
+  const controller = viewer.scene.screenSpaceCameraController
+  controller.minimumZoomDistance = 1200000.0
+  controller.maximumZoomDistance = 8500000.0
+
+  // 유휴 자전
   let lastFrameTime = Date.now()
   preUpdateListener = () => {
     const now = Date.now()
     const dt = (now - lastFrameTime) / 1000
     lastFrameTime = now
-
     if (!isCameraFlying && now - lastInteractionTime > 3000) {
       viewer.scene.camera.rotate(Cesium.Cartesian3.UNIT_Z, -GLOBE_ROTATION_SPEED * dt)
     }
   }
   viewer.scene.preUpdate.addEventListener(preUpdateListener)
 
-  // 5. 마우스/터치 조작 감지 이벤트 연동
   window.addEventListener('mousemove', resetIdleTimer)
   window.addEventListener('mousedown', resetIdleTimer)
   window.addEventListener('wheel', resetIdleTimer)
   window.addEventListener('touchstart', resetIdleTimer)
 
-  // 6. 즐겨찾기 핀 렌더링
   renderFavorites()
 
-  // 선택된 도시가 있을 때만 비행 및 타겟 핀 렌더링
   if (weatherStore.activeTargetCoords) {
-    flyToLocation(
-      weatherStore.activeTargetCoords.lat,
-      weatherStore.activeTargetCoords.lon,
-      weatherStore.activeTargetCoords.name,
-      1.8
-    )
+    const { lat, lon, name, temp } = weatherStore.activeTargetCoords
+    flyToLocation(lat, lon, name, temp, 1.8)
   }
 }
 
-// 지정된 (lat, lon) 위치로 3D 카메라 슈루룩 비행 (FlyTo)
-const flyToLocation = (lat, lon, name = '관측지', duration = 2.2) => {
+// 지정된 위치로 3D 카메라 비행
+const flyToLocation = (lat, lon, name = '관측지', temp = null, duration = 2.2) => {
   if (!viewer || !window.Cesium) return
   const Cesium = window.Cesium
 
@@ -160,21 +193,15 @@ const flyToLocation = (lat, lon, name = '관측지', duration = 2.2) => {
 
   const targetPosition = Cesium.Cartesian3.fromDegrees(lon, lat, 0)
 
-  // 선택된 관측지 3D 마커 및 100% 노이즈 없는 Canvas Billboard 라벨
   activeEntity = viewer.entities.add({
     name: name,
     position: targetPosition,
-    point: {
-      pixelSize: 16,
-      color: Cesium.Color.fromCssColorString('#f59e0b'),
-      outlineColor: Cesium.Color.WHITE,
-      outlineWidth: 3,
-    },
     billboard: {
-      image: createLabelCanvas(`📍 ${name}`, false),
-      scale: 0.5,
+      image: createTempLabelCanvas(temp, name, false),
+      scale: 0.65,
       verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-      pixelOffset: new Cesium.Cartesian2(0, -20),
+      pixelOffset: new Cesium.Cartesian2(0, -8),
+      disableDepthTestDistance: Number.POSITIVE_INFINITY,
     },
   })
 
@@ -187,18 +214,12 @@ const flyToLocation = (lat, lon, name = '관측지', duration = 2.2) => {
     },
     duration: duration,
     easingFunction: Cesium.EasingFunction.QUADRATIC_IN_OUT,
-    complete: () => {
-      isCameraFlying = false
-      resetIdleTimer()
-    },
-    cancel: () => {
-      isCameraFlying = false
-      resetIdleTimer()
-    },
+    complete: () => { isCameraFlying = false; resetIdleTimer() },
+    cancel: () => { isCameraFlying = false; resetIdleTimer() },
   })
 }
 
-// ⭐ 즐겨찾기 도시들 3D 핀 표출
+// ⭐ 즐겨찾기 도시 3D 핀
 const renderFavorites = () => {
   if (!viewer || !window.Cesium) return
   const Cesium = window.Cesium
@@ -208,34 +229,30 @@ const renderFavorites = () => {
 
   weatherStore.favorites.forEach((city) => {
     if (!city.location || city.location.lat === undefined) return
-    const { lat, lon, name } = city.location
+    const { lat, lon, name, region } = city.location
+    const temp = city.current ? city.current.temp_c : null
+    const displayName = region && region !== name ? `${region} ${name}` : name
 
     const ent = viewer.entities.add({
       name: `Fav_${name}`,
       position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
-      point: {
-        pixelSize: 14,
-        color: Cesium.Color.fromCssColorString('#ef4444'),
-        outlineColor: Cesium.Color.WHITE,
-        outlineWidth: 2,
-      },
       billboard: {
-        image: createLabelCanvas(`⭐ ${name}`, true),
-        scale: 0.5,
+        image: createTempLabelCanvas(temp, displayName, true),
+        scale: 0.55,
         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-        pixelOffset: new Cesium.Cartesian2(0, -18),
+        pixelOffset: new Cesium.Cartesian2(0, -6),
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
       },
     })
     favEntities.push(ent)
   })
 }
 
-// 스토어 타겟 좌표 변경 감지
 watch(
   () => weatherStore.activeTargetCoords,
   (newCoords) => {
     if (newCoords && newCoords.lat !== undefined && newCoords.lon !== undefined) {
-      flyToLocation(newCoords.lat, newCoords.lon, newCoords.name)
+      flyToLocation(newCoords.lat, newCoords.lon, newCoords.name, newCoords.temp)
     } else if (!newCoords && activeEntity && viewer) {
       viewer.entities.remove(activeEntity)
       activeEntity = null
@@ -244,18 +261,13 @@ watch(
   { deep: true }
 )
 
-// 즐겨찾기 도시 변경 감지
 watch(
   () => weatherStore.favorites,
-  () => {
-    renderFavorites()
-  },
+  () => { renderFavorites() },
   { deep: true }
 )
 
-onMounted(() => {
-  initCesium()
-})
+onMounted(() => { initCesium() })
 
 onUnmounted(() => {
   window.removeEventListener('mousemove', resetIdleTimer)
