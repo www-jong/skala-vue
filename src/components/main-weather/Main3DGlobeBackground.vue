@@ -145,7 +145,7 @@ const initCesium = async () => {
 
   // 줌 범위 제한
   const controller = viewer.scene.screenSpaceCameraController
-  controller.minimumZoomDistance = 1200000.0
+  controller.minimumZoomDistance = 12000.0
   controller.maximumZoomDistance = 8500000.0
 
   // 유휴 자전
