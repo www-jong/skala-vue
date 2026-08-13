@@ -149,7 +149,7 @@ const handleBack = () => {
         </div>
 
         <div v-if="isForecastLoading" class="forecast-loading">
-          ⚡ Open-Meteo 시간별 예보 데이터를 로딩 중입니다...
+          ⚡ OpenWeatherMap 시간별 예보 데이터를 로딩 중입니다...
         </div>
 
         <div v-else-if="hourlyForecast.length > 0" class="hourly-scroll-container">
@@ -170,12 +170,12 @@ const handleBack = () => {
 
       <section class="forecast-section">
         <div class="forecast-section-header">
-          <h3>📅 7일간 주간 일기예보</h3>
+          <h3>📅 5일간 주간 일기예보</h3>
           <span class="forecast-sub">최고/최저 기온 및 강수 확률</span>
         </div>
 
         <div v-if="isForecastLoading" class="forecast-loading">
-          ⚡ Open-Meteo 주간 예보 데이터를 로딩 중입니다...
+          ⚡ OpenWeatherMap 주간 예보 데이터를 로딩 중입니다...
         </div>
 
         <div v-else-if="dailyForecast.length > 0" class="daily-list-container">
