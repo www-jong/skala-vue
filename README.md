@@ -7,9 +7,10 @@
 ## 📌 과제 제출 정보
 
 - **소스코드 저장소**: GitHub Public Repository (`https://github.com/사용자계정/skala-vue`)
-- **배포 주소**: Vercel / Netlify / GitHub Pages 배포 링크
+- **배포 주소**: [skala-vue-phi-seven.vercel.app](https://skala-vue-phi-seven.vercel.app/)
 
 ### 제출 전 확인 사항 (Chrome Secret Mode)
+
 - 브라우저 시크릿 창(macOS: `Cmd + Shift + N`) 접속 시 로그인 요구 없이 소스코드가 정상 작동하는지 더블 체크 완료.
 
 ---

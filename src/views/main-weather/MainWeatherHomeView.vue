@@ -74,7 +74,7 @@ const handleCloseModal = () => {
 
     <!-- 날씨 카드 리스트 영역 -->
     <section class="main-list-box">
-      <h3>대한민국 및 글로벌 관측 지역 현황 (Open-Meteo API 실시간 연동)</h3>
+      <h3>대한민국 및 글로벌 관측 지역 현황 (OpenWeatherMap API 실시간 연동)</h3>
 
       <div v-if="weatherStore.isLoading" class="status-bar" style="margin-bottom: 16px;">
         ⚡ 실시간 기상 데이터를 수신하는 중입니다...

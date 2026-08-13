@@ -14,15 +14,17 @@ export const useExerciseWeatherStore = defineStore('exerciseWeather', () => {
   // 상세 페이지 도시별 캐시 맵 ({ [cityId]: { data, fetchedAt } })
   const detailCacheMap = ref({})
 
-  // 과제 전용 기본 3개 도시 메타 장부
+  // 과제 전용 기본 5개 관측 도시 메타 장부 (loc_01 ~ loc_05)
   const defaultCities = [
     {
       location: {
-        id: 'city_01',
+        id: 'loc_01',
         english: 'Seoul',
         country: '대한민국',
         region: '서울특별시',
-        name: '서울',
+        name: '강남구',
+        lat: 37.5172,
+        lon: 127.0473,
       },
       current: {
         temp_c: 28,
@@ -33,11 +35,47 @@ export const useExerciseWeatherStore = defineStore('exerciseWeather', () => {
     },
     {
       location: {
-        id: 'city_02',
+        id: 'loc_02',
+        english: 'Ulsan',
+        country: '대한민국',
+        region: '울산광역시',
+        name: '남구',
+        lat: 35.5439,
+        lon: 129.3301,
+      },
+      current: {
+        temp_c: 30,
+        feels_like_c: 32.1,
+        humidity: 70,
+        condition: { text: '구름조금', code: 1001, icon: 'partly-cloudy' },
+      },
+    },
+    {
+      location: {
+        id: 'loc_03',
+        english: 'Busan',
+        country: '대한민국',
+        region: '부산광역시',
+        name: '해운대구',
+        lat: 35.1631,
+        lon: 129.1636,
+      },
+      current: {
+        temp_c: 23,
+        feels_like_c: 24.8,
+        humidity: 80,
+        condition: { text: '흐림', code: 1002, icon: 'cloudy' },
+      },
+    },
+    {
+      location: {
+        id: 'loc_04',
         english: 'Suwon',
         country: '대한민국',
         region: '경기도',
         name: '수원시',
+        lat: 37.2636,
+        lon: 127.0286,
       },
       current: {
         temp_c: 16,
@@ -48,28 +86,32 @@ export const useExerciseWeatherStore = defineStore('exerciseWeather', () => {
     },
     {
       location: {
-        id: 'city_03',
-        english: 'Busan',
+        id: 'loc_05',
+        english: 'Jeju',
         country: '대한민국',
-        region: '부산광역시',
-        name: '부산',
+        region: '제주특별자치도',
+        name: '제주시',
+        lat: 33.4996,
+        lon: 126.5312,
       },
       current: {
-        temp_c: 23,
-        feels_like_c: 24.8,
-        humidity: 80,
-        condition: { text: '흐림', code: 1002, icon: 'cloudy' },
+        temp_c: 9,
+        feels_like_c: 10.0,
+        humidity: 65,
+        condition: { text: '맑음', code: 1000, icon: 'sunny' },
       },
     },
   ]
 
   const cityMapping = {
-    city_01: { english: 'Seoul', country: '대한민국', region: '서울특별시', name: '서울' },
-    city_02: { english: 'Suwon', country: '대한민국', region: '경기도', name: '수원시' },
-    city_03: { english: 'Busan', country: '대한민국', region: '부산광역시', name: '부산' },
+    loc_01: { english: 'Seoul', country: '대한민국', region: '서울특별시', name: '강남구', lat: 37.5172, lon: 127.0473 },
+    loc_02: { english: 'Ulsan', country: '대한민국', region: '울산광역시', name: '남구', lat: 35.5439, lon: 129.3301 },
+    loc_03: { english: 'Busan', country: '대한민국', region: '부산광역시', name: '해운대구', lat: 35.1631, lon: 129.1636 },
+    loc_04: { english: 'Suwon', country: '대한민국', region: '경기도', name: '수원시', lat: 37.2636, lon: 127.0286 },
+    loc_05: { english: 'Jeju', country: '대한민국', region: '제주특별자치도', name: '제주시', lat: 33.4996, lon: 126.5312 },
   }
 
-  // 1) 대시보드 3개 도시 날씨 로딩 (10분 TTL 캐싱)
+  // 1) 대시보드 5개 관측 도시 날씨 로딩 (10분 TTL 캐싱)
   async function fetchHomeWeather(force = false) {
     const nowSec = Math.floor(Date.now() / 1000)
     const TEN_MIN_SEC = 10 * 60 // 600초 (10분)
@@ -152,8 +194,8 @@ export const useExerciseWeatherStore = defineStore('exerciseWeather', () => {
         status: raw.weather[0].description,
         humidity: `${raw.main.humidity}%`,
         wind: `${raw.wind.speed} m/s`,
-        lat: raw.coord ? raw.coord.lat : '-',
-        lon: raw.coord ? raw.coord.lon : '-',
+        lat: targetCity.lat || (raw.coord ? raw.coord.lat : '-'),
+        lon: targetCity.lon || (raw.coord ? raw.coord.lon : '-'),
       }
 
       detailCacheMap.value[cityId] = {
