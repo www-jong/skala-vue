@@ -1226,3 +1226,33 @@ html.dark .recent-del-btn:hover {
   color: #fca5a5;
   background: #450a0a;
 }
+
+/* exercise.css 반응형 미디어 쿼리 */
+@media (max-width: 768px) {
+  .modern-search-input {
+    min-width: unset !important;
+    font-size: 0.9rem !important;
+    padding: 10px 40px 10px 42px !important;
+  }
+
+  .detail-hero-card {
+    padding: 20px;
+  }
+
+  .detail-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-metrics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .single-unit-toggle-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+

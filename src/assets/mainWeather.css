@@ -1040,3 +1040,192 @@ html.dark .modal-close-btn {
   background: #1e2638;
   color: #cbd5e1;
 }
+
+/* ==========================================================================
+   7. 메인 날씨 앱 전체 반응형 미디어 쿼리 (RWD)
+   ========================================================================== */
+
+/* 태블릿 (1024px 이하) */
+@media (max-width: 1024px) {
+  .main-weather-container {
+    padding: 0 12px;
+  }
+
+  .main-search-input-container,
+  .main-search-input,
+  .main-autocomplete-dropdown {
+    max-width: 100%;
+  }
+
+  .daily-row-card {
+    grid-template-columns: 130px 110px 120px 1fr;
+    padding: 12px 16px;
+  }
+}
+
+/* 중형 모바일 / 태블릿 소형 (768px 이하) */
+@media (max-width: 768px) {
+  .main-header-row {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+
+  .main-header-title {
+    font-size: 1.25rem;
+  }
+
+  .single-unit-toggle-btn {
+    padding: 6px 12px;
+    font-size: 0.82rem;
+  }
+
+  .main-search-box,
+  .main-list-box,
+  .forecast-section {
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+  }
+
+  .main-search-header h3,
+  .main-list-box h3,
+  .forecast-section-header h3 {
+    font-size: 1.05rem;
+  }
+
+  .main-search-input-container {
+    min-width: unset;
+  }
+
+  .main-search-input {
+    min-width: unset;
+    height: 46px !important;
+    font-size: 0.95rem !important;
+    padding: 10px 44px 10px 46px !important;
+  }
+
+  .main-search-icon {
+    left: 14px;
+    font-size: 1.05rem;
+  }
+
+  .weather-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .main-temp {
+    font-size: 2.1rem;
+  }
+
+  .daily-row-card {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+    padding: 12px;
+  }
+
+  .daily-temp-bar-group {
+    grid-column: span 2;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  /* 모달 반응형 */
+  .main-modal-overlay {
+    padding: 10px;
+  }
+
+  .main-modal-dialog {
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+
+  .main-modal-header {
+    padding: 14px 18px;
+  }
+
+  .main-modal-body {
+    padding: 16px;
+  }
+
+  .main-modal-footer {
+    padding: 12px 18px;
+  }
+}
+
+/* 소형 모바일 (480px 이하) */
+@media (max-width: 480px) {
+  .main-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .single-unit-toggle-btn {
+    align-self: flex-start;
+  }
+
+  .main-search-box,
+  .main-list-box,
+  .forecast-section {
+    padding: 14px 12px;
+  }
+
+  .main-search-input {
+    height: 42px !important;
+    font-size: 0.88rem !important;
+    padding: 8px 38px 8px 40px !important;
+    border-radius: 21px !important;
+  }
+
+  .main-search-clear-btn {
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .card-footer-info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .btn-detail {
+    width: 100%;
+    text-align: center;
+    padding: 8px 0 !important;
+  }
+
+  .hourly-pill-card {
+    width: 66px;
+    padding: 10px 4px;
+  }
+
+  .hourly-temp {
+    font-size: 0.95rem;
+  }
+
+  .daily-row-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .daily-weather-group {
+    justify-content: space-between;
+  }
+
+  .daily-temp-bar-group {
+    grid-column: unset;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .temp-range-bar {
+    max-width: none;
+  }
+}
+

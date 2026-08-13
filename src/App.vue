@@ -16,7 +16,12 @@ const route = useRoute()
   <div :class="['top-app-wrapper', { dark: isDarkmode }]">
     <!-- 상단 네비게이션 바 -->
     <nav class="nav-bar">
-      <div class="nav-tabs">
+      <div class="nav-brand">
+        <span class="nav-logo">⚡ SKALA Vue</span>
+      </div>
+
+      <!-- 데스크탑 전용 상단 탭 -->
+      <div class="nav-tabs desktop-only">
         <RouterLink
           to="/"
           :class="['nav-btn', { active: route.path === '/' || route.path === '/about' || (route.path.startsWith('/weather') && !route.path.startsWith('/exercise')) }]"
@@ -54,6 +59,31 @@ const route = useRoute()
     <main class="main-content">
       <RouterView />
     </main>
+
+    <!-- 모바일 전용 하단 고정 탭바 (Bottom Nav) -->
+    <nav class="bottom-nav-bar mobile-only">
+      <RouterLink
+        to="/"
+        :class="['bottom-nav-item', { active: route.path === '/' || route.path === '/about' || (route.path.startsWith('/weather') && !route.path.startsWith('/exercise')) }]"
+      >
+        <span class="bottom-nav-icon">🌦️</span>
+        <span class="bottom-nav-label">날씨 앱</span>
+      </RouterLink>
+      <RouterLink
+        to="/practice"
+        :class="['bottom-nav-item', { active: route.path === '/practice' }]"
+      >
+        <span class="bottom-nav-icon">📚</span>
+        <span class="bottom-nav-label">실습</span>
+      </RouterLink>
+      <RouterLink
+        to="/exercise"
+        :class="['bottom-nav-item', { active: route.path.startsWith('/exercise') }]"
+      >
+        <span class="bottom-nav-icon">📝</span>
+        <span class="bottom-nav-label">과제</span>
+      </RouterLink>
+    </nav>
   </div>
 </template>
 
@@ -63,6 +93,25 @@ const route = useRoute()
   max-width: 1400px;
   margin: 0 auto;
   padding: 120px 20px 40px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo {
+  font-size: 1.05rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html.dark .nav-logo {
+  background: linear-gradient(135deg, #818cf8 0%, #2dd4bf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* 상단 네비게이션 플로팅 글래스모피즘 고정 바 */
@@ -108,6 +157,7 @@ html.dark .nav-bar {
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .nav-btn:hover {
@@ -221,39 +271,113 @@ html.dark .chapter-group {
   background: #2563eb;
 }
 
-/* 테마 스위치 스타일 */
-.app-container {
-  min-height: 100vh;
-  padding: 20px;
-  background-color: #f8fafc;
-  color: #1e293b;
-  transition: all 0.3s ease;
+/* 모바일 전용 하단 고정 탭바 (Bottom Nav) */
+.bottom-nav-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(99, 102, 241, 0.18);
+  z-index: 10000;
+  box-shadow: 0 -4px 20px rgba(79, 70, 229, 0.08);
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* 다크 모드 스타일 */
-.app-container.dark {
-  background-color: #0f172a;
-  color: #f8fafc;
+html.dark .bottom-nav-bar {
+  background: rgba(15, 23, 42, 0.92);
+  border-top-color: rgba(129, 140, 248, 0.22);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
 }
 
-.app-container.dark .practice-section {
-  background-color: #1e293b;
-  border-color: #334155;
-  color: #f8fafc;
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1;
+  height: 100%;
+  color: #64748b;
+  text-decoration: none;
+  font-size: 0.74rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
 }
 
-.app-container.dark .practice-section h2 {
-  color: #f8fafc;
+.bottom-nav-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
 }
 
-/* 테마 토글 버튼 */
-.theme-toggle-btn {
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: none;
-  background: #334155;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
+.bottom-nav-item.active {
+  color: #4f46e5;
+}
+
+.bottom-nav-item.active .bottom-nav-icon {
+  transform: translateY(-2px) scale(1.12);
+}
+
+html.dark .bottom-nav-item {
+  color: #94a3b8;
+}
+
+html.dark .bottom-nav-item.active {
+  color: #2dd4bf;
+}
+
+/* 데스크탑/모바일 표시 분개 클래스 */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* 반응형 레이아웃 (App.vue) */
+@media (max-width: 768px) {
+  #app {
+    padding: 74px 12px 76px;
+  }
+
+  .nav-bar {
+    top: 8px;
+    width: calc(100% - 16px);
+    padding: 0 16px;
+    height: 48px;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: flex !important;
+  }
+
+  .chapter-group {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  #app {
+    padding: 70px 8px 74px;
+  }
+
+  .nav-bar {
+    padding: 0 12px;
+  }
 }
 </style>
+
