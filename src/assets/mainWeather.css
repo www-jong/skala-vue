@@ -353,14 +353,14 @@ html.dark .unit-pill-badge {
 }
 
 .weather-card {
-  background: #ffffff;
-  border: 1px solid #e0e7ff;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(224, 231, 255, 0.6);
   border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 16px;
+  padding: 12px 14px;
+  margin-bottom: 0;
   cursor: pointer;
   position: relative;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -380,12 +380,12 @@ html.dark .unit-pill-badge {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .card-title {
   margin: 0 !important;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #0f172a;
 }
@@ -393,28 +393,28 @@ html.dark .unit-pill-badge {
 .card-body {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .temp-section {
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  gap: 8px;
 }
 
 .main-temp {
-  font-size: 2.4rem;
+  font-size: 1.65rem;
   font-weight: 900;
   color: #0f172a;
   line-height: 1;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
 }
 
 .temp-unit {
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #4f46e5;
-  margin-left: 2px;
+  margin-left: 1px;
 }
 
 .feels-temp {
@@ -1284,6 +1284,280 @@ html.dark .modal-close-btn {
 
   .temp-range-bar {
     max-width: none;
+  }
+}
+
+/* ==========================================================================
+   Cesium 3D 지구본 모드 전용 UI 컨트롤 스타일
+   ========================================================================== */
+
+.header-right-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-toggle-globe-mode {
+  background: linear-gradient(135deg, #6366f1 0%, #2563eb 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  padding: 8px 18px !important;
+  border-radius: 20px !important;
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45) !important;
+  transition: all 0.25s ease !important;
+  white-space: nowrap !important;
+}
+
+.btn-toggle-globe-mode:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.6) !important;
+  background: linear-gradient(135deg, #4f46e5 0%, #1d4ed8 100%) !important;
+  border-color: #ffffff !important;
+}
+
+.globe-mode-floating-bar {
+  position: fixed !important;
+  top: 96px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 999999 !important;
+  background: rgba(15, 23, 42, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 30px !important;
+  padding: 10px 24px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7) !important;
+  animation: fadeInDown 0.4s ease !important;
+}
+
+.globe-mode-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #f8fafc;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.btn-restore-dashboard {
+  background: #f59e0b;
+  color: #0f172a;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 18px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-restore-dashboard:hover {
+  background: #fbbf24;
+  transform: scale(1.05);
+}
+
+.hidden-for-globe {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-12px) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ==========================================================================
+   화면 양쪽 끝(100vw) 풀스크린 고정 듀얼 사이드바 (App.vue 마진/최대너비 무시)
+   ========================================================================== */
+.dual-sidebar-layout {
+  position: relative;
+  z-index: 1;
+}
+
+.dual-sidebar-wrapper {
+  position: static;
+}
+
+/* ⬅️ 좌측 사이드바: 브라우저 최좌측 24px 고정 도킹 */
+.sidebar-panel.left-sidebar {
+  position: fixed;
+  left: 24px;
+  top: 100px;
+  bottom: 24px;
+  width: 380px;
+  z-index: 10;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+/* ➡️ 우측 사이드바: 브라우저 최우측 24px 고정 도킹 */
+.sidebar-panel.right-sidebar {
+  position: fixed;
+  right: 24px;
+  top: 100px;
+  bottom: 24px;
+  width: 360px;
+  z-index: 10;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 0.90rem;
+  font-weight: 800;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.single-unit-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px !important;
+  border-radius: 14px !important;
+  font-size: 0.76rem !important;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  background: rgba(99, 102, 241, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.unit-pill-badge {
+  padding: 2px 6px !important;
+  border-radius: 10px !important;
+  font-size: 0.72rem !important;
+}
+
+/* 🟢 하단 중앙 고정 100% 불투명 3D 지구본 탐색 버튼 */
+.bottom-center-btn {
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 1000 !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid #60a5fa !important;
+  padding: 10px 24px !important;
+  border-radius: 26px !important;
+  font-size: 0.9rem !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.6) !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+}
+
+.bottom-center-btn:hover {
+  transform: translate(-50%, -3px) !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.8), 0 0 24px rgba(59, 130, 246, 0.8) !important;
+}
+
+.sidebar-content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-content-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-content-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.sidebar-content-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.empty-favorites-box {
+  text-align: center;
+  padding: 32px 14px;
+  color: #94a3b8;
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  margin-top: 10px;
+}
+
+.empty-fav-icon {
+  font-size: 2rem;
+  margin: 0 0 6px 0;
+}
+
+.empty-fav-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  margin: 0 0 4px 0;
+}
+
+.empty-fav-desc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin: 0;
+
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* 태블릿 이하 모바일 대응 */
+@media (max-width: 992px) {
+  .sidebar-panel.left-sidebar,
+  .sidebar-panel.right-sidebar {
+    position: static;
+    width: 100%;
+    max-height: none;
+    margin-bottom: 20px;
   }
 }
 
