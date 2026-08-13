@@ -1,6 +1,6 @@
 # 🌍 SKALA Vue.js 실시간 기상 관측 대시보드 SPA
 
-> **SK Inc. AX Vue.js 종합실습 과정 (Day 1 ~ Day 4, 과제 ① ~ 과제 ⑨) 전 과정 완수 프로젝트**
+> **SK Inc. AX Vue.js 종합실습 과정 (Day 1 ~ Day 4, 과제 ① ~ 과제 ⑨) 전 과정 완수 프로젝트**  
 > OpenWeatherMap & WeatherAPI 연동 · CesiumJS 3D 실사 위성 지구본 · Pinia 10분 TTL 타임스탬프 캐싱 · 글래스모피즘 RWD
 
 [![Vercel Deployment](<https://img.shields.io/website?url=https%3A%2F%2Fskala-vue-phi-seven.vercel.app%2F&label=Vercel%20Live&status=Online&color=000000&logo=vercel>)](https://skala-vue-phi-seven.vercel.app/)
@@ -18,6 +18,52 @@
 | **개인 서버** | [https://skala.weon.kro.kr/](https://skala.weon.kro.kr/)                           |        ![Server Status](https://img.shields.io/website?url=https%3A%2F%2Fskala.weon.kro.kr%2F&label=Status&status=Online&color=22c55e&logo=nginx)        | Nginx 개인서버 호스팅 |
 
 > 💡 **접속 안내**: 시크릿 창(`Cmd + Shift + N` / `Ctrl + Shift + N`) 접속 시 별도 로그인 없이 소스코드가 정상 작동합니다.
+
+---
+
+## 📸 주요 시스템 실행 화면 (System Showcase)
+
+### 1. 🌌 메인 날씨 대시보드 & 3D 실사 위성 지구본 (Main App)
+
+<p align="center">
+  <img src="./docs/images/home_dark.png" width="49%" alt="메인 대시보드 PC 다크 테마" />
+  <img src="./docs/images/home_light.png" width="49%" alt="메인 대시보드 PC 라이트 테마" />
+</p>
+
+* **[좌] PC 데스크톱 다크 모드 (`home_dark.png`)**: 오로라 미드나잇 테마의 CesiumJS 3D 실사 위성 지구본, 관측 도시 실시간 기온(°C) 캔버스 렌더링, 1000px 대형 검색바 및 글래스모피즘 카드 레이아웃.
+* **[우] PC 데스크톱 라이트 모드 (`home_light.png`)**: 맑음 테마의 화사한 라이트 모드로 Open-Meteo API 연동 10개 도시 실시간 기상 상태 및 섭씨/화씨 전역 토글러가 동기화된 화면.
+
+<p align="center">
+  <img src="./docs/images/zoom_in.png" width="60%" alt="3D 위성 카메라 Zoom-In 뷰" />
+  <img src="./docs/images/home_mobile.png" width="38%" alt="메인 앱 모바일 반응형 뷰" />
+</p>
+
+* **[좌] PC 3D 위성 지형 Zoom-In (`zoom_in.png`)**: 도시 선택 시 `flyTo` 카메라 비행으로 초고해상도 위성 지형에 접근하며 24시간/7일 실시간 일기예보 글래스모피즘 모달이 활성화된 화면.
+* **[우] 메인 앱 모바일 반응형 뷰 (`home_mobile.png`)**: 모바일 해상도(375px~768px) 반응형 1컬럼 스택 레이아웃 및 iOS/Android 하단 주소창 겹침 방지 Safe Area 보정 화면.
+
+---
+
+### 2. ⛅ 과제 대시보드 (ExerciseApp - 과제 1~5)
+
+<p align="center">
+  <img src="./docs/images/exercise.png" width="60%" alt="과제 대시보드 PC 2x2 그리드 뷰" />
+  <img src="./docs/images/home_exercise.png" width="38%" alt="과제 대시보드 모바일 반응형 뷰" />
+</p>
+
+* **[좌] 과제 PC 데스크톱 2x2 그리드 뷰 (`exercise.png`)**: 과제 ①(Mockup), 과제 ②(Composition API 검색), 과제 ③(컴포넌트 4종 분리), 과제 ④/⑤(Vue Router & Pinia 스토어)를 한눈에 비교·테스트하는 대시보드 화면.
+* **[우] 과제 모바일 반응형 뷰 (`home_exercise.png`)**: 모바일 디바이스 화면에 맞춰 1열 세로 스택으로 자동 재배치되는 모바일 반응형 과제 뷰 화면.
+
+---
+
+### 3. 📚 실습 대시보드 (PracticeApp - 실습 46종)
+
+<p align="center">
+  <img src="./docs/images/practice.png" width="60%" alt="실습 대시보드 PC 뷰" />
+  <img src="./docs/images/home_pratice.png" width="38%" alt="실습 대시보드 모바일 반응형 뷰" />
+</p>
+
+* **[좌] 실습 PC 데스크톱 뷰 (`practice.png`)**: Basic 23종, Component 10종, Composition 8종, Library 5종의 Vue 3 핵심 실습 예제를 모듈화하여 한곳에서 구동하는 PC 화면.
+* **[우] 실습 모바일 반응형 뷰 (`home_pratice.png`)**: 모바일 해상도에서도 터치 및 탭 스위칭이 용이하도록 가변 1컬럼 레이아웃으로 최적화된 모바일 실습 화면.
 
 ---
 
@@ -114,7 +160,7 @@ npm run deploy
 2. 🎨 [**독창적 UI/UX & 기술 고도화 (Customizations)**](docs/CUSTOMIZATIONS.md)
    - CesiumJS 3D 실사 위성 지구본, Canvas 온도 아이콘, Glassmorphism, 10분 TTL 캐싱, IME 정규식 예외 처리
 3. 📝 [**ExerciseApp (과제 1~3 스냅샷 & 과제 4~ 통합 SPA) 교재 기반 상세 보고서**](docs/EXERCISE.md)
-   - 교재/레퍼런스() 요구사항 대비 소스 코드 및 구조 세부 분석
+   - 교재 요구사항 대비 소스 코드 및 구조 세부 분석
 4. 📚 [**PracticeApp (실습 46종) 종합 보고서**](docs/PRACTICE.md)
    - Basic(23종), Component(10종), Composition(8종), Library(5종) 실습 구현 내역
 
@@ -131,4 +177,4 @@ npm run deploy
 3. **⚡ Pinia 클라이언트 10분 TTL 타임스탬프 캐싱 (`exerciseWeatherStore.js`)**
    - 수신 시각(`fetchedAt`) 기준 10분(600초) 이내 재방문 시 API 호출 100% 스킵.
 4. **📱 모바일 반응형 (RWD) & Safe Area 보정**
-   - iOS/Android 하단 주소창 및 홈 인디케이터 바 간섭을 `env(safe-area-inset-bottom)`으로 보정 (`bottom: max(80px, ...)`).
+   - iOS/Android 하단 주소창 및 홈 인디케이터 바 간섭을 `env(safe-area-inset-bottom)`으로 보정.
