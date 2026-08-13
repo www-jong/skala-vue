@@ -28,7 +28,7 @@ const routes = [
     component: PracticeApp,
   },
 
-  // 3. 과제 (Exercise 5: 라우터 적용 - WeatherHomeView.vue 100% 본래 복구 사용)
+  // 3. 과제 (Exercise 5: 라우터 적용)
   {
     path: '/exercise',
     name: 'Exercise',
@@ -39,23 +39,24 @@ const routes = [
         name: 'ExerciseWeatherHome',
         component: () => import('@/views/weather/WeatherHomeView.vue'),
       },
-        {
-    path: 'weather/:cityId',
-    name: 'WeatherDetail',
-    component: () => import('@/views/weather/WeatherDetailView.vue'),
-  },
-  {
-    path: '/about',
-    name: 'WeatherAbout',
-    component: () => import('@/views/weather/WeatherAboutView.vue'),
-  },
+      {
+        path: 'weather/:cityId',
+        name: 'WeatherDetail',
+        component: () => import('@/views/weather/WeatherDetailView.vue'),
+      },
+      {
+        path: '/about',
+        name: 'WeatherAbout',
+        component: () => import('@/views/weather/WeatherAboutView.vue'),
+      },
     ],
   },
-  // 4. 404 예외 라우트
+
+  // 4. 글로벌 404 Not Found 라우트
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('@/views/weather/NotFoundView.vue'),
+    component: () => import('@/views/main-weather/MainNotFoundView.vue'),
   },
 ]
 

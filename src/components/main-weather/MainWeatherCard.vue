@@ -42,15 +42,6 @@ const displayFeelTemp = computed(() => {
   }
   return rawTemp
 })
-
-// [국가] 시/도 지역 지명 표기 가공 (중복 제거)
-const formattedLocation = computed(() => {
-  const { country, region, name } = props.cityItem.location
-  if (!region || region === name) {
-    return `[${country}] ${name}`
-  }
-  return `[${country}] ${region} ${name}`
-})
 </script>
 
 <template>
@@ -59,11 +50,18 @@ const formattedLocation = computed(() => {
     :class="{ selected: isSelected }"
     @click="emit('select', cityItem)"
   >
-    <div class="card-header">
-      <h4 class="card-title">
-        📍 {{ formattedLocation }}
-      </h4>
-      <div class="card-action-group">
+    <!-- 상단 행: 국가 뱃지 + 도시 지명 + 액션 버튼 그룹 -->
+    <div class="card-top-row">
+      <div class="card-location-info">
+        <div class="location-name-line">
+          <span class="country-pill">[{{ cityItem.location.country }}]</span>
+          <h4 class="card-city-title">
+            {{ cityItem.location.region && cityItem.location.region !== cityItem.location.name ? `${cityItem.location.region} ${cityItem.location.name}` : cityItem.location.name }}
+          </h4>
+        </div>
+      </div>
+
+      <div class="card-action-btns">
         <button
           class="btn-star-fav"
           :class="{ active: isFav }"
@@ -81,23 +79,27 @@ const formattedLocation = computed(() => {
       </div>
     </div>
 
-    <div class="card-body">
-      <div class="temp-section">
-        <span class="main-temp">{{ displayTemp }}<span class="temp-unit">{{ configStore.unitSymbol }}</span></span>
-        <span class="feels-temp">체감 {{ displayFeelTemp }}{{ configStore.unitSymbol }}</span>
+    <!-- 중앙 행: 기온 및 기상 상태 뱃지 -->
+    <div class="card-mid-row">
+      <div class="temp-display-group">
+        <span class="main-temp-num">{{ displayTemp }}<span class="temp-unit-symbol">{{ configStore.unitSymbol }}</span></span>
+        <span class="feels-like-tag">체감 {{ displayFeelTemp }}{{ configStore.unitSymbol }}</span>
       </div>
 
-      <div class="card-footer-info">
-        <div class="badge-group">
-          <span v-if="cityItem.current.temp_c >= 30" class="badge hot">🔥 폭염 (30°C 이상)</span>
-          <span v-else-if="cityItem.current.temp_c >= 25" class="badge warm">☀️ 더움 (25°C 이상)</span>
-          <span v-else-if="cityItem.current.temp_c >= 18" class="badge pleasant">🌿 쾌적 (18°C 이상)</span>
-          <span v-else-if="cityItem.current.temp_c >= 10" class="badge chilly">🧥 쌀쌀 (10°C 이상)</span>
-          <span v-else class="badge cold">❄️ 한파 (10°C 미만)</span>
-          <span class="condition-tag">상태: {{ cityItem.current.condition.text }}</span>
-        </div>
-        <span class="humidity-info">💧 습도 {{ cityItem.current.humidity }}%</span>
+      <div class="condition-badge-group">
+        <span v-if="cityItem.current.temp_c >= 30" class="badge hot">🔥 폭염</span>
+        <span v-else-if="cityItem.current.temp_c >= 25" class="badge warm">☀️ 더움</span>
+        <span v-else-if="cityItem.current.temp_c >= 18" class="badge pleasant">🌿 쾌적</span>
+        <span v-else-if="cityItem.current.temp_c >= 10" class="badge chilly">🧥 쌀쌀</span>
+        <span v-else class="badge cold">❄️ 한파</span>
+        <span class="status-tag">상태: {{ cityItem.current.condition.text }}</span>
       </div>
+    </div>
+
+    <!-- 하단 메트릭: 습도 & 풍속 -->
+    <div class="card-bottom-row">
+      <span class="metric-item humidity">💧 습도 {{ cityItem.current.humidity }}%</span>
+      <span class="metric-item wind">💨 풍속 {{ cityItem.current.wind_kph }}km/h</span>
     </div>
   </div>
 </template>
