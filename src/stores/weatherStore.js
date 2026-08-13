@@ -30,7 +30,11 @@ export const useWeatherStore = defineStore('mainWeather', () => {
     const lat = city.location.lat
     const lon = city.location.lon
     const name = city.location.name || '관측지'
-    activeTargetCoords.value = { lat, lon, name }
+    const region = city.location.region || ''
+    const temp = city.current ? city.current.temp_c : null
+    // 지역은 다르지만 지명이 있을 때만 합치셔 전달 (울산광역시 남구 등)
+    const displayName = region && region !== name ? `${region} ${name}` : name
+    activeTargetCoords.value = { lat, lon, name: displayName, temp }
   }
 
   // 최근 즐겨찾기 로드
