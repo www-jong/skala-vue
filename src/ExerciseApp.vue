@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, RouterLink, RouterView } from 'vue-router'
 import WeatherMockup from './components/exercise/WeatherMockup.vue'
 import WeatherComposition from './components/exercise/WeatherComposition.vue'
@@ -9,6 +9,25 @@ import UnitToggler from './components/exercise/UnitToggler.vue'
 const route = useRoute()
 // 과제 선택 서브 탭 ('all' | 'ex1' | 'ex2' | 'ex3' | 'ex4')
 const subTab = ref('all')
+const isDropdownOpen = ref(false)
+
+const subTabOptions = [
+  { value: 'all', label: '📦 전체 보기 (2x2)' },
+  { value: 'ex1', label: '⛅ 과제 1. Mockup' },
+  { value: 'ex2', label: '⛅ 과제 2. Composition' },
+  { value: 'ex3', label: '⛅ 과제 3. Component' },
+  { value: 'ex4', label: '⛅ 과제 4/5. Router & Store' },
+]
+
+const currentOptionLabel = computed(() => {
+  const found = subTabOptions.find((opt) => opt.value === subTab.value)
+  return found ? found.label : ''
+})
+
+function selectSubTab(val) {
+  subTab.value = val
+  isDropdownOpen.value = false
+}
 
 // /about 및 /weather 경로 이동 시 라우터 뷰(ex4 또는 all)가 표시되도록 감지
 watch(
@@ -28,21 +47,50 @@ watch(
   <div class="exercise-app-wrapper">
     <!-- ExerciseApp 전용 하위 서브 네비게이션 바 -->
     <div class="sub-nav-bar">
-      <button :class="['sub-nav-btn', { active: subTab === 'all' }]" @click="subTab = 'all'">
-        전체 보기 (2x2)
-      </button>
-      <button :class="['sub-nav-btn', { active: subTab === 'ex1' }]" @click="subTab = 'ex1'">
-        과제 1. Mockup
-      </button>
-      <button :class="['sub-nav-btn', { active: subTab === 'ex2' }]" @click="subTab = 'ex2'">
-        과제 2. Composition
-      </button>
-      <button :class="['sub-nav-btn', { active: subTab === 'ex3' }]" @click="subTab = 'ex3'">
-        과제 3. Component
-      </button>
-      <button :class="['sub-nav-btn', { active: subTab === 'ex4' }]" @click="subTab = 'ex4'">
-        과제 4/5. Router & Store
-      </button>
+      <!-- 데스크탑 전용 버튼 목록 -->
+      <div class="sub-nav-tabs desktop-only">
+        <button :class="['sub-nav-btn', { active: subTab === 'all' }]" @click="subTab = 'all'">
+          전체 보기 (2x2)
+        </button>
+        <button :class="['sub-nav-btn', { active: subTab === 'ex1' }]" @click="subTab = 'ex1'">
+          과제 1. Mockup
+        </button>
+        <button :class="['sub-nav-btn', { active: subTab === 'ex2' }]" @click="subTab = 'ex2'">
+          과제 2. Composition
+        </button>
+        <button :class="['sub-nav-btn', { active: subTab === 'ex3' }]" @click="subTab = 'ex3'">
+          과제 3. Component
+        </button>
+        <button :class="['sub-nav-btn', { active: subTab === 'ex4' }]" @click="subTab = 'ex4'">
+          과제 4/5. Router & Store
+        </button>
+      </div>
+
+      <!-- 모바일 전용 커스텀 드롭다운 (우측 하단 드롭) -->
+      <div class="sub-nav-select-wrapper mobile-only">
+        <button
+          type="button"
+          class="sub-nav-dropdown-btn"
+          @click="isDropdownOpen = !isDropdownOpen"
+        >
+          <span>{{ currentOptionLabel }}</span>
+          <span :class="['select-arrow', { open: isDropdownOpen }]">▾</span>
+        </button>
+
+        <Transition name="dropdown-fade">
+          <div v-if="isDropdownOpen" class="sub-nav-dropdown-menu">
+            <button
+              v-for="opt in subTabOptions"
+              :key="opt.value"
+              type="button"
+              :class="['sub-nav-dropdown-item', { active: subTab === opt.value }]"
+              @click="selectSubTab(opt.value)"
+            >
+              {{ opt.label }}
+            </button>
+          </div>
+        </Transition>
+      </div>
     </div>
 
     <!-- 1) 전체 보기 (그리드 레이아웃) -->
